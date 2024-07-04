@@ -2,7 +2,7 @@
 # An object of Flask class is our WSGI application.
 import os
 from google.cloud import firestore
-from flask import Flask, request
+from flask import Flask, request, jsonify
 import requests, json
 
 # Flask constructor takes the name of 
