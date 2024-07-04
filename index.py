@@ -24,7 +24,7 @@ def processUserInformation():
     print(data)
     
     # Initialize Firestore
-    credentials_path = 'admitanalytics-edab3-firebase-adminsdk-2gjjt-9979942c5f.json'
+    credentials_path = '../admitanalytics-edab3-firebase-adminsdk-2gjjt-9979942c5f.json'
     db = initialize_firestore(credentials_path)
     
     # Define collection name and document ID (you may want to generate a unique ID or use a meaningful identifier)
