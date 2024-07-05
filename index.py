@@ -37,6 +37,36 @@ def processUserInformation():
     # Return a JSON response
     return jsonify(data), 200
 
+@app.route("/addusercollegeinformation")
+def addUserCollegeInformation():
+    # Get the parameters from the request
+    user_id = request.args.get('user_id')
+    major = request.args.get('major')
+    college_desc = request.args.get('college_desc')
+    
+    # Print or log the data for debugging purposes
+    print(f'user_id: {user_id}, major: {major}, college_desc: {college_desc}')
+    
+    # Initialize Firestore
+    credentials_path = 'firebase-credentials.json'
+    db = initialize_firestore(credentials_path)
+    
+    # Define collection name and document ID
+    collection_name = 'userData'
+    document_id = user_id
+    
+    # Get a reference to the document
+    doc_ref = db.collection(collection_name).document(document_id)
+    
+    # Update the document with the new information
+    doc_ref.update({
+        'major': major,
+        'college_desc': college_desc
+    })
+    
+    # Return a JSON response
+    return jsonify({'status': 'success', 'user_id': user_id, 'major': major, 'college_desc': college_desc}), 200
+    
 def initialize_firestore(credentials_path):
     # Set the environment variable for the Firestore credentials
     os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credentials_path
