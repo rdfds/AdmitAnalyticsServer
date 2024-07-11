@@ -5,14 +5,16 @@ import os
 from google.cloud import firestore
 from flask import Flask, request, jsonify 
 import requests, json
-import openai
+from openai import OpenAI
 
 # Flask constructor takes the name of 
 # current module (__name__) as argument.
 app = Flask(__name__)
 
 #ChatGPT API key
-openai.api_key = 'sk-proj-czDzsNeDWP1ga6mioWZLT3BlbkFJNyywbxcSpmRdD1LB0Gc6'
+client = OpenAI(
+    api_key = "sk-proj-czDzsNeDWP1ga6mioWZLT3BlbkFJNyywbxcSpmRdD1LB0Gc6",
+)
 
 # The route() function of the Flask class is a decorator, 
 # which tells the application which URL should call 
