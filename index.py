@@ -1,9 +1,11 @@
 # Importing flask module in the project is mandatory
 # An object of Flask class is our WSGI application.
+import csv
 import os
 from google.cloud import firestore
 from flask import Flask, request, jsonify 
 import requests, json
+import openai
 
 # Flask constructor takes the name of 
 # current module (__name__) as argument.
@@ -58,15 +60,196 @@ def addUserCollegeInformation():
     # Get a reference to the document
     doc_ref = db.collection(collection_name).document(document_id)
     
+    # Load college data from CSV
+    college_data = load_college_data('us_universities.csv')
+    
+    # Get the structured list of interested colleges
+    interested_colleges = get_interested_colleges(college_desc, college_data)
+    
     # Update the document with the new information
     doc_ref.update({
         'major': major,
-        'college_desc': college_desc
+        'interested_colleges': interested_colleges
     })
+
+    find_similar_entries(user_id, interested_colleges)
     
     # Return a JSON response
     return jsonify({'status': 'success', 'user_id': user_id, 'major': major, 'college_desc': college_desc}), 200
+
+
+def load_college_data(csv_file):
+    college_data = []
+    with open(csv_file, 'r') as file:
+        reader = csv.reader(file)
+        for row in reader:
+            college_data.append({
+                'name': row[0],
+            })
+    return college_data
+
+def get_interested_colleges(college_desc, college_data):
+    openai.api_key = 'sk-proj-czDzsNeDWP1ga6mioWZLT3BlbkFJNyywbxcSpmRdD1LB0Gc6'
+    completion = client.chat.completions.create(
+        model="gpt-4o",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant that structures college descriptions."},
+            {"role": "user", "content": f"Given the following description of college preferences: '{college_desc}', and the list of all US colleges, return a list of all the colleges that match the preferences"}
+        ],
+        functions=[
+            {
+                "name": "get_college_list",
+                "description": "Returns a structured list of colleges based on the description of preferences.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "college_list": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "required": ["college_list"]
+                }
+            }
+        ],
+        function_call="auto"
+    )
+
+    function_response = response.choices[0].message.function_call.argumets
+    structured_colleges = json.loads(function_response).get('college_list', [])
+
+    return structured_colleges
+
+def calculate_score(value_user, value_entry, buffer, max_score, reduction_factor):
+    if value_user == value_entry:
+        return max_score
+    elif abs(value_user - value_entry) <= buffer:
+        return max_score * reduction_factor
+    else:
+        return 0
+
+def calculate_similarity(user_info, entry):
+    score = 0
+    max_points = 0
+
+    # Define the weights for each category
+    weights = {
+        'race': 5,
+        'family_income_level': 5,
+        'requesting_financial_aid': 5,
+        'first_generation': 5,
+        'underrepresented_minority_status': 5,
+        'school_type': 5,
+        'major': 10,
+        'sat_score': 15,
+        'act_score': 15,
+        'course_rigor': 10,
+        'school_competitiveness': 10,
+        'location_competitiveness': 10,
+        'legacy_donor_connection': 15
+    }
     
+    # Simple attribute checks
+    for attribute in ['race', 'family_income_level', 'requesting_financial_aid', 'first_generation', 'underrepresented_minority_status', 'school_type', 'major']:
+        if user_info[attribute] == entry[attribute]:
+            score += weights[attribute]
+        max_points += weights[attribute]
+
+    # Complex attribute checks
+    score += calculate_score(user_info['sat_score'], entry['sat_score'], 100, weights['sat_score'], 0.1)
+    score += calculate_score(user_info['act_score'], entry['act_score'], 4, weights['act_score'], 0.2)
+    score += calculate_score(user_info['course_rigor'], entry['course_rigor'], 1, weights['course_rigor'], 0.5)
+    score += calculate_score(user_info['school_competitiveness'], entry['school_competitiveness'], 1, weights['school_competitiveness'], 0.5)
+    score += calculate_score(user_info['location_competitiveness'], entry['location_competitiveness'], 2, weights['location_competitiveness'], [0.25, 0.75])
+
+    # Legacy check
+    user_legacy = user_info['legacy_donor_connection']
+    entry_legacy = entry['legacy_donor_connection']
+    for u_legacy in user_legacy:
+        for e_legacy in entry_legacy:
+            u_num, u_school = u_legacy.split('-')
+            e_num, e_school = e_legacy.split('-')
+            if u_school == e_school:
+                num_diff = abs(int(u_num) - int(e_num))
+                if num_diff == 0:
+                    score += weights['legacy_donor_connection']
+                elif num_diff == 1:
+                    score += weights['legacy_donor_connection'] * 0.5
+                elif num_diff == 2:
+                    score += weights['legacy_donor_connection'] * 0.25
+    max_points += weights['legacy_donor_connection']
+
+    similarity_percentage = (score / max_points) * 100
+    return similarity_percentage
+
+def get_user_info(user_id, db):
+    doc_ref = db.collection('userData').document(user_id)
+    doc = doc_ref.get()
+    if doc.exists:
+        return doc.to_dict()
+    else:
+        return None
+
+def get_all_entries(db):
+    activities = db.collection('activities').stream()
+    demographics = db.collection('demographics').stream()
+    academics = db.collection('academics').stream()
+    majors = db.collection('majors').stream()
+    results = db.collection('results').stream()
+    
+    activities_data = [doc.to_dict() for doc in activities]
+    demographics_data = {doc.id: doc.to_dict() for doc in demographics}
+    academics_data = {doc.id: doc.to_dict() for doc in academics}
+    majors_data = {doc.id: doc.to_dict() for doc in majors}
+    results_data = {doc.id: doc.to_dict() for doc in results}
+    
+    return activities_data, demographics_data, academics_data, majors_data, results_data
+
+def filter_entries_by_colleges(interested_colleges, results_data):
+    filtered_post_ids = []
+    for result in results_data.values():
+        if any(college in result['accepted_colleges'] for college in interested_colleges):
+            filtered_post_ids.append(result['post_id'])
+    return filtered_post_ids
+
+def compile_entry(post_id, demographics_data, academics_data, majors_data):
+    entry = {}
+    entry.update(demographics_data[post_id])
+    entry.update(academics_data[post_id])
+    entry.update(majors_data[post_id])
+    return entry
+
+def find_similar_entries(user_id, interested_colleges):
+    user_id = request.args.get('user_id')
+    interested_colleges = request.args.getlist('interested_colleges')
+    
+    db = initialize_firestore('firebase-credentials.json')
+    user_info = get_user_info(user_id, db)
+    
+    if not user_info:
+        return jsonify({"error": "User not found"}), 404
+    
+    activities_data, demographics_data, academics_data, majors_data, results_data = get_all_entries(db)
+    
+    filtered_post_ids = filter_entries_by_colleges(interested_colleges, results_data)
+    
+    similar_entries = []
+    
+    for post_id in filtered_post_ids:
+        entry = compile_entry(post_id, demographics_data, academics_data, majors_data)
+        similarity = calculate_similarity(user_info, entry)
+        similar_entries.append((entry, similarity))
+    
+    similar_entries.sort(key=lambda x: x[1], reverse=True)
+    top_20_entries = similar_entries[:20]
+    
+    # Store the top 20 entries in Firestore
+    store_data_in_firestore(db, 'similarProfiles', user_id, top_20_entries)
+    
+    return jsonify(similar_colleges_data), 200
+
 def initialize_firestore(credentials_path):
     # Set the environment variable for the Firestore credentials
     os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credentials_path
