@@ -121,7 +121,7 @@ def get_interested_colleges(college_desc, college_data):
         function_call="auto"
     )
 
-    function_response = response.choices[0].message.function_call.arguments
+    function_response = completion.choices[0].message.function_call.arguments
     structured_colleges = json.loads(function_response).get('college_list', [])
 
     return structured_colleges
