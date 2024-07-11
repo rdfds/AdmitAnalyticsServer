@@ -11,6 +11,9 @@ import openai
 # current module (__name__) as argument.
 app = Flask(__name__)
 
+#ChatGPT API key
+openai.api_key = 'sk-proj-czDzsNeDWP1ga6mioWZLT3BlbkFJNyywbxcSpmRdD1LB0Gc6'
+
 # The route() function of the Flask class is a decorator, 
 # which tells the application which URL should call 
 # the associated function.
@@ -72,7 +75,7 @@ def addUserCollegeInformation():
         'interested_colleges': interested_colleges
     })
 
-    find_similar_entries(user_id, interested_colleges)
+    #find_similar_entries(user_id, interested_colleges)
     
     # Return a JSON response
     return jsonify({'status': 'success', 'user_id': user_id, 'major': major, 'college_desc': college_desc}), 200
@@ -89,7 +92,6 @@ def load_college_data(csv_file):
     return college_data
 
 def get_interested_colleges(college_desc, college_data):
-    openai.api_key = 'sk-proj-czDzsNeDWP1ga6mioWZLT3BlbkFJNyywbxcSpmRdD1LB0Gc6'
     completion = client.chat.completions.create(
         model="gpt-4o",
         messages=[
@@ -117,7 +119,7 @@ def get_interested_colleges(college_desc, college_data):
         function_call="auto"
     )
 
-    function_response = response.choices[0].message.function_call.argumets
+    function_response = response.choices[0].message.function_call.arguments
     structured_colleges = json.loads(function_response).get('college_list', [])
 
     return structured_colleges
@@ -248,7 +250,7 @@ def find_similar_entries(user_id, interested_colleges):
     # Store the top 20 entries in Firestore
     store_data_in_firestore(db, 'similarProfiles', user_id, top_20_entries)
     
-    return jsonify(similar_colleges_data), 200
+    return jsonify(top_20_entries), 200
 
 def initialize_firestore(credentials_path):
     # Set the environment variable for the Firestore credentials
