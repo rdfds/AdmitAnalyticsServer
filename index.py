@@ -68,19 +68,20 @@ def addUserCollegeInformation():
     # Load college data from CSV
     college_data = load_college_data('us_universities.csv')
     
-    # Get the structured list of interested colleges
+    # Get the structured list of interested colleges and major
     interested_colleges = get_interested_colleges(college_desc, college_data)
-    
+    major = get_similar_major(major)
+
     # Update the document with the new information
     doc_ref.update({
         'major': major,
         'interested_colleges': interested_colleges
     })
 
-    #find_similar_entries(user_id, interested_colleges)
+    find_similar_entries(user_id, interested_colleges, major)
     
     # Return a JSON response
-    return jsonify({'status': 'success', 'user_id': user_id, 'major': major, 'college_desc': college_desc}), 200
+    #return jsonify({'status': 'success', 'user_id': user_id, 'major': major, 'college_desc': college_desc}), 200
 
 
 def load_college_data(csv_file):
@@ -140,19 +141,19 @@ def calculate_similarity(user_info, entry):
 
     # Define the weights for each category
     weights = {
-        'race': 5,
-        'family_income_level': 5,
-        'requesting_financial_aid': 5,
-        'first_generation': 5,
-        'underrepresented_minority_status': 5,
-        'school_type': 5,
-        'major': 10,
-        'sat_score': 15,
-        'act_score': 15,
-        'course_rigor': 10,
+        'race': 15,
+        'family_income_level': 7,
+        'requesting_financial_aid': 3,
+        'first_generation': 15,
+        'underrepresented_minority_status': 15,
+        'school_type': 7,
+        'major': 20,
+        #'sat_score': 15,
+        #'act_score': 15,
+        'course_rigor': 5,
         'school_competitiveness': 10,
-        'location_competitiveness': 10,
-        'legacy_donor_connection': 15
+        'location_competitiveness': 15,
+        'legacy_donor_connection': 20
     }
     
     # Simple attribute checks
@@ -162,8 +163,8 @@ def calculate_similarity(user_info, entry):
         max_points += weights[attribute]
 
     # Complex attribute checks
-    score += calculate_score(user_info['sat_score'], entry['sat_score'], 100, weights['sat_score'], 0.1)
-    score += calculate_score(user_info['act_score'], entry['act_score'], 4, weights['act_score'], 0.2)
+    #score += calculate_score(user_info['sat_score'], entry['sat_score'], 100, weights['sat_score'], 0.1)
+    #score += calculate_score(user_info['act_score'], entry['act_score'], 4, weights['act_score'], 0.2)
     score += calculate_score(user_info['course_rigor'], entry['course_rigor'], 1, weights['course_rigor'], 0.5)
     score += calculate_score(user_info['school_competitiveness'], entry['school_competitiveness'], 1, weights['school_competitiveness'], 0.5)
     score += calculate_score(user_info['location_competitiveness'], entry['location_competitiveness'], 2, weights['location_competitiveness'], [0.25, 0.75])
@@ -218,6 +219,73 @@ def filter_entries_by_colleges(interested_colleges, results_data):
             filtered_post_ids.append(result['post_id'])
     return filtered_post_ids
 
+def filter_entries_by_major(user_major, majors_data):
+    user_major_category = get_major_category(user_major)
+    
+    if not user_major_category:
+        return []
+
+    filtered_post_ids = []
+    for result in majors_data.values():
+        post_major = result.get('major', '').strip().lower()
+        post_major_category = get_major_category(post_major)
+        if post_major_category == user_major_category:
+            filtered_post_ids.append(result['post_id'])
+    return filtered_post_ids
+
+# Load major categories from the CSV file
+def load_major_categories(csv_file):
+    major_categories = {}
+    with open(csv_file, 'r') as file:
+        reader = csv.reader(file)
+        next(reader)  # Skip the header row
+        for row in reader:
+            major = row[1].strip().lower()  # Ensure consistent formatting
+            category = row[2].strip()
+            major_categories[major] = category
+    return major_categories
+
+def get_major_category(input_major):
+    input_major_lower = input_major.strip().lower()
+    return load_major_categories('majors-list.csv').get(input_major_lower, None)
+
+def get_similar_major(input_major):
+    major_categories = load_major_categories('majors.csv')
+    major_list = list(major_categories.keys())
+    input_major = input_major.replace(' ', '_')
+
+    for major in major_list:
+        if major.lower().strip() == input_major.lower().strip():
+            return major
+
+    client = OpenAI(
+        api_key="sk-proj-czDzsNeDWP1ga6mioWZLT3BlbkFJNyywbxcSpmRdD1LB0Gc6",
+    )
+    
+    prompt = f"Given the major '{input_major}', identify the major is is equivalent or closest to from this list: {', '.join(major_categories)}"
+    
+    response = client.chat.completions.create(
+        model="gpt-4-turbo",
+        messages=[
+            {"role": "system", "content": "You are assisting in finding the most similar major."},
+            {"role": "user", "content": prompt}
+        ],
+        max_tokens=50,
+        stop=None
+
+    )
+    
+    function_response = response.choices[0].message.content
+    
+    # Extract the closest major from the response
+    closest_major = None
+    for major in major_list:
+        if major.lower() in function_response.lower():
+            closest_major = major
+            break
+    
+    return closest_major if closest_major else "n/a or undecided"
+
 def compile_entry(post_id, demographics_data, academics_data, majors_data):
     entry = {}
     entry.update(demographics_data[post_id])
@@ -225,10 +293,7 @@ def compile_entry(post_id, demographics_data, academics_data, majors_data):
     entry.update(majors_data[post_id])
     return entry
 
-def find_similar_entries(user_id, interested_colleges):
-    user_id = request.args.get('user_id')
-    interested_colleges = request.args.getlist('interested_colleges')
-    
+def find_similar_entries(user_id, interested_colleges, major):
     db = initialize_firestore('firebase-credentials.json')
     user_info = get_user_info(user_id, db)
     
@@ -237,8 +302,9 @@ def find_similar_entries(user_id, interested_colleges):
     
     activities_data, demographics_data, academics_data, majors_data, results_data = get_all_entries(db)
     
-    filtered_post_ids = filter_entries_by_colleges(interested_colleges, results_data)
-    
+    filtered_post_ids_colleges = filter_entries_by_colleges(interested_colleges, results_data)
+    filtered_post_ids_majors = filter_entries_by_major(major, majors_data)
+    filtered_post_ids = find_intersection(filtered_post_ids_majors, filtered_post_ids_colleges)
     similar_entries = []
     
     for post_id in filtered_post_ids:
@@ -253,6 +319,9 @@ def find_similar_entries(user_id, interested_colleges):
     store_data_in_firestore(db, 'similarProfiles', user_id, top_20_entries)
     
     return jsonify(top_20_entries), 200
+
+def find_intersection(college_filtered_ids, major_filtered_ids):
+    return list(set(college_filtered_ids) & set(major_filtered_ids))
 
 def initialize_firestore(credentials_path):
     # Set the environment variable for the Firestore credentials
