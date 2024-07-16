@@ -76,8 +76,8 @@ def addUserCollegeInformation():
         'interested_colleges': interested_colleges
     })
 
-    find_similar_entries(user_id, interested_colleges, major)
-    
+    response = find_similar_entries(user_id, interested_colleges, major)
+    return response
     # Return a JSON response
     #return jsonify({'status': 'success', 'user_id': user_id, 'major': major, 'college_desc': college_desc}), 200
 
