@@ -294,7 +294,7 @@ def compile_entry(post_id, demographics_data, academics_data, majors_data):
 def find_similar_entries(user_id, interested_colleges, major):
     db = initialize_firestore('api/firebase-credentials.json')
     user_info = get_user_info(user_id, db)
-    
+    return user_info['requesting_financial_aid']
     if not user_info:
         return jsonify({"error": "User not found"}), 404
     
@@ -316,7 +316,7 @@ def find_similar_entries(user_id, interested_colleges, major):
     # Store the top 20 entries in Firestore
     #store_data_in_firestore(db, 'similarProfiles', user_id, top_20_entries)
     
-    return jsonify(top_20_entries), 200
+    #return jsonify(top_20_entries), 200
 
 def find_intersection(college_filtered_ids, major_filtered_ids):
     return list(set(college_filtered_ids) & set(major_filtered_ids))
