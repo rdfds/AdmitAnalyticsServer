@@ -69,7 +69,7 @@ def addUserCollegeInformation():
     # Get the structured list of interested colleges and major
     interested_colleges = get_interested_colleges(college_desc, college_data)
     major = get_similar_major(major)
-    return major
+    #return major
     # Update the document with the new information
     doc_ref.update({
         'major': major,
@@ -77,7 +77,7 @@ def addUserCollegeInformation():
     })
 
     response = find_similar_entries(user_id, interested_colleges, major)
-    #return response
+    return response
     # Return a JSON response
     #return jsonify({'status': 'success', 'user_id': user_id, 'major': major, 'college_desc': college_desc}), 200
 
