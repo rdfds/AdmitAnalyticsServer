@@ -304,12 +304,12 @@ def find_similar_entries(user_id, interested_colleges, major):
     filtered_post_ids_majors = filter_entries_by_major(major, majors_data)
     filtered_post_ids = find_intersection(filtered_post_ids_majors, filtered_post_ids_colleges)
     similar_entries = []
-    
+    return filtered_post_ids_colleges[1]
     for post_id in filtered_post_ids:
         entry = compile_entry(post_id, demographics_data, academics_data, majors_data)
         similarity = calculate_similarity(user_info, entry)
         similar_entries.append((entry, similarity))
-    return similar_entries[0]
+    #return similar_entries[0]
     similar_entries.sort(key=lambda x: x[1], reverse=True)
     top_20_entries = similar_entries[:20]
     
