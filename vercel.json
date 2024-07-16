@@ -11,10 +11,10 @@
             "src": "/(.*)",
             "dest": "/"
         }
-    ]
+    ],
     "functions": {
-        "api/*.py": {
-          "maxDuration": 30
+        "index.py": {
+            "maxDuration": 30
         }
     }
 }
