@@ -31,8 +31,7 @@ def processUserInformation():
     print(data)
     
     # Initialize Firestore
-    credentials_path = '../firebase-credentials.json'
-    db = initialize_firestore(credentials_path)
+    db = initialize_firestore(os.path.abspath(os.path.join(os.path.dirname(__file__), '../firebase-credentials.json')))
     
     # Define collection name and document ID (you may want to generate a unique ID or use a meaningful identifier)
     collection_name = 'userData'
@@ -55,8 +54,7 @@ def addUserCollegeInformation():
     print(f'user_id: {user_id}, major: {major}, college_desc: {college_desc}')
     
     # Initialize Firestore
-    credentials_path = '../firebase-credentials.json'
-    db = initialize_firestore(credentials_path)
+    db = initialize_firestore(os.path.abspath(os.path.join(os.path.dirname(__file__), '../firebase-credentials.json')))
     
     # Define collection name and document ID
     collection_name = 'userData'
@@ -66,7 +64,7 @@ def addUserCollegeInformation():
     doc_ref = db.collection(collection_name).document(document_id)
     
     # Load college data from CSV
-    college_data = load_college_data('../us_universities.csv')
+    college_data = load_college_data(os.path.abspath(os.path.join(os.path.dirname(__file__), '../us_universities.csv')))
     
     # Get the structured list of interested colleges and major
     interested_colleges = get_interested_colleges(college_desc, college_data)
@@ -247,10 +245,10 @@ def load_major_categories(csv_file):
 
 def get_major_category(input_major):
     input_major_lower = input_major.strip().lower()
-    return load_major_categories('../majors-list.csv').get(input_major_lower, None)
+    return load_major_categories(os.path.abspath(os.path.join(os.path.dirname(__file__), '../majors-list.csv'))).get(input_major_lower, None)
 
 def get_similar_major(input_major):
-    major_categories = load_major_categories('../majors-list.csv')
+    major_categories = load_major_categories(os.path.abspath(os.path.join(os.path.dirname(__file__), '../majors-list.csv')))
     major_list = list(major_categories.keys())
     input_major = input_major.replace(' ', '_')
 
@@ -294,7 +292,7 @@ def compile_entry(post_id, demographics_data, academics_data, majors_data):
     return entry
 
 def find_similar_entries(user_id, interested_colleges, major):
-    db = initialize_firestore('../firebase-credentials.json')
+    db = initialize_firestore(os.path.abspath(os.path.join(os.path.dirname(__file__), '../firebase-credentials.json')))
     user_info = get_user_info(user_id, db)
     
     if not user_info:
