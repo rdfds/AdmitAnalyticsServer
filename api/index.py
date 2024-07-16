@@ -309,12 +309,12 @@ def find_similar_entries(user_id, interested_colleges, major):
         entry = compile_entry(post_id, demographics_data, academics_data, majors_data)
         similarity = calculate_similarity(user_info, entry)
         similar_entries.append((entry, similarity))
-    
+    return similar_entries
     similar_entries.sort(key=lambda x: x[1], reverse=True)
     top_20_entries = similar_entries[:20]
     
     # Store the top 20 entries in Firestore
-    store_data_in_firestore(db, 'similarProfiles', user_id, top_20_entries)
+    #store_data_in_firestore(db, 'similarProfiles', user_id, top_20_entries)
     
     return jsonify(top_20_entries), 200
 
