@@ -153,7 +153,7 @@ def calculate_similarity(user_info, entry):
         'course_rigor': 5,
         'school_competitiveness': 10,
         'location_competitiveness': 15,
-        'legacy_donor_connection': 20
+        'legacy_donor_connection': 25
     }
     
     # Simple attribute checks
@@ -250,7 +250,7 @@ def get_major_category(input_major):
     return load_major_categories('majors-list.csv').get(input_major_lower, None)
 
 def get_similar_major(input_major):
-    major_categories = load_major_categories('majors.csv')
+    major_categories = load_major_categories('majors-list.csv')
     major_list = list(major_categories.keys())
     input_major = input_major.replace(' ', '_')
 
