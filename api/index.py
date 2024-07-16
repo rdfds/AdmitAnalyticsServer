@@ -294,7 +294,7 @@ def compile_entry(post_id, demographics_data, academics_data, majors_data):
 def find_similar_entries(user_id, interested_colleges, major):
     db = initialize_firestore('api/firebase-credentials.json')
     user_info = get_user_info(user_id, db)
-    return user_info['legacy_donor_connection']
+    return str(user_info)
     if not user_info:
         return jsonify({"error": "User not found"}), 404
     
