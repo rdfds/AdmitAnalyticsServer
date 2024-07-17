@@ -354,8 +354,7 @@ def find_similar_entries(user_id, interested_colleges, major):
     filtered_post_ids = find_intersection(filtered_post_ids_majors, filtered_post_ids_colleges)
     similar_entries = []
     
-    values = results_data.values()
-    str1 = str(interested_colleges) + " and then " + values[0]
+    str1 = str(interested_colleges) + " and then " + str(results_data)
     return str1
 
     for post_id in filtered_post_ids:
