@@ -264,15 +264,15 @@ def filter_entries_by_colleges(interested_colleges, results_data):
     
     # Normalize interested_colleges
     normalized_interested_colleges = [college.strip().lower().replace(' ', '_') for college in interested_colleges]
-    
+    count = 0
     for result in results_data.values():
         accepted_colleges = result.get('accepted_colleges', [])
         normalized_accepted_colleges = [college.strip().lower().replace(' ', '_') for college in accepted_colleges]
         
         if any(college in normalized_accepted_colleges for college in normalized_interested_colleges):
             filtered_post_ids.append(result['post_id'])
-    
-    return filtered_post_ids
+            count += 1
+    return filtered_post_ids, count
 
 def filter_entries_by_major(user_major, majors_data):
     user_major_normalized = user_major.strip().lower().replace(' ', '_')
@@ -290,7 +290,7 @@ def filter_entries_by_major(user_major, majors_data):
             filtered_post_ids.append(result['post_id'])
             count += 1
     
-    return filtered_post_ids, count
+    return filtered_post_ids
 
 # Load major categories from the CSV file
 def load_major_categories(csv_file):
