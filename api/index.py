@@ -261,23 +261,35 @@ def get_all_entries(db):
 
 def filter_entries_by_colleges(interested_colleges, results_data):
     filtered_post_ids = []
+    
+    # Normalize interested_colleges
+    normalized_interested_colleges = [college.strip().lower().replace(' ', '_') for college in interested_colleges]
+    
     for result in results_data.values():
-        if any(college in result['accepted_colleges'] for college in interested_colleges):
+        accepted_colleges = result.get('accepted_colleges', [])
+        normalized_accepted_colleges = [college.strip().lower().replace(' ', '_') for college in accepted_colleges]
+        
+        if any(college in normalized_accepted_colleges for college in normalized_interested_colleges):
             filtered_post_ids.append(result['post_id'])
+    
     return filtered_post_ids
 
 def filter_entries_by_major(user_major, majors_data):
-    user_major_category = get_major_category(user_major)
+    user_major_normalized = user_major.strip().lower().replace(' ', '_')
+    user_major_category = get_major_category(user_major_normalized)
     
     if not user_major_category:
         return []
 
     filtered_post_ids = []
+    
     for result in majors_data.values():
-        post_major = result.get('major', '').strip().lower()
+        post_major = result.get('major', '').strip().lower().replace(' ', '_')
         post_major_category = get_major_category(post_major)
+        
         if post_major_category == user_major_category:
             filtered_post_ids.append(result['post_id'])
+    
     return filtered_post_ids
 
 # Load major categories from the CSV file
