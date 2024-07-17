@@ -383,7 +383,7 @@ def find_similar_entries(user_id, interested_colleges, major):
     # Store the top 20 entries in Firestore
     #store_data_in_firestore(db, 'similarProfiles', user_id, top_20_entries)
     
-    #return jsonify(top_20_entries), 200
+    return jsonify(top_20_entries), 200
 
 def find_intersection(college_filtered_ids, major_filtered_ids):
     return list(set(college_filtered_ids) & set(major_filtered_ids))
