@@ -279,7 +279,7 @@ def filter_entries_by_major(user_major, majors_data):
     #input_major_formatted = user_major.upper().strip().replace(' ', '_')
     #return input_major_formatted, 0
     user_major_category = get_major_category(user_major_normalized)
-    return str(user_major_category)
+    return str(user_major_category, 0)
     if not user_major_category:
         return [], 0
 
