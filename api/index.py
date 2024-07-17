@@ -27,6 +27,8 @@ def hello_world():
 def processUserInformation():
     # Get the parameters from the request and convert to a dictionary
     data = request.args.to_dict()
+    location_competitiveness = get_area_difficulty(data['location'])
+    data['location_competitiveness'] = location_competitiveness
     # Print or log the data for debugging purposes
     print(data)
     
@@ -42,6 +44,53 @@ def processUserInformation():
     
     # Return a JSON response
     return jsonify(data), 200
+
+def get_area_difficulty(location):
+    client = OpenAI(
+        api_key = "sk-proj-czDzsNeDWP1ga6mioWZLT3BlbkFJNyywbxcSpmRdD1LB0Gc6",
+    )
+    prompt = (
+        f"Given this location description: {location}, rate the competitiveness of the area in terms of competitiveness in applying to college (ie, how hard is it to get into an selective american college being from here) from 1 to 10, where 10 is the most competitive and oversaturated, "
+        "and 1 is the least competitive. If unsure becuase the description is too vague, provide a score of 5 or 6. If the prompt contains no description, return '-1' EXACTLY! "
+        "Consider both domestic (US) and international locations. Try to think as a college admissions officer. \n\n"
+        "Return ONLY the rating as a SINGLE number. The scale should be weighted so 5/6 is the average college applicant, 1 is extremely underrepresented, and 2 is extremely overrrepresented location"
+    )
+    
+    response = client.chat.completions.create(
+        #model = "gpt-3.5-turbo-0125",
+        model = "gpt-4o",
+        messages = [
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": prompt},
+        ],
+        functions=[
+            {
+                "name": "get_location_difficulty",
+                "description": "Returns a number from 1-10 representing the competitiveness of applying to college from a given location",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "location_competitiveness": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "required": ["location_competitiveness"]
+                }
+            }
+        ],
+        function_call="auto"
+    )
+    
+    try:
+        function_response = completion.choices[0].message.function_call.arguments
+        location_competitiveness = json.loads(function_response).get('location_competitiveness', [])
+        return location_competitiveness
+    except ValueError:
+        # If the response is not a valid number, return a default value
+        return -1
 
 @app.route("/addusercollegeinformation")
 def addUserCollegeInformation():
@@ -140,10 +189,10 @@ def calculate_similarity(user_info, entry):
     # Define the weights for each category
     weights = {
         'race': 15,
-        'family_income_level': 7,
-        'requesting_financial_aid': 3,
-        'first_generation': 15,
-        'underrepresented_minority_status': 15,
+        'income': 7,
+        'fin_aid': 3,
+        'first_gen': 15,
+        'urm_status': 15,
         'school_type': 7,
         'major': 20,
         #'sat_score': 15,
@@ -151,11 +200,11 @@ def calculate_similarity(user_info, entry):
         'course_rigor': 5,
         'school_competitiveness': 10,
         'location_competitiveness': 15,
-        'legacy_donor_connection': 25
+        'legacy': 25
     }
     
     # Simple attribute checks
-    for attribute in ['race', 'family_income_level', 'requesting_financial_aid', 'first_generation', 'underrepresented_minority_status', 'school_type', 'major']:
+    for attribute in ['race', 'income', 'fin_aid', 'first_gen', 'urm_status', 'school_type', 'major']:
         if user_info[attribute] == entry[attribute]:
             score += weights[attribute]
         max_points += weights[attribute]
@@ -168,8 +217,8 @@ def calculate_similarity(user_info, entry):
     score += calculate_score(user_info['location_competitiveness'], entry['location_competitiveness'], 2, weights['location_competitiveness'], [0.25, 0.75])
 
     # Legacy check
-    user_legacy = user_info['legacy_donor_connection']
-    entry_legacy = entry['legacy_donor_connection']
+    user_legacy = user_info['legacy']
+    entry_legacy = entry['legacy']
     for u_legacy in user_legacy:
         for e_legacy in entry_legacy:
             u_num, u_school = u_legacy.split('-')
@@ -177,12 +226,12 @@ def calculate_similarity(user_info, entry):
             if u_school == e_school:
                 num_diff = abs(int(u_num) - int(e_num))
                 if num_diff == 0:
-                    score += weights['legacy_donor_connection']
+                    score += weights['legacy']
                 elif num_diff == 1:
-                    score += weights['legacy_donor_connection'] * 0.5
+                    score += weights['legacy'] * 0.5
                 elif num_diff == 2:
-                    score += weights['legacy_donor_connection'] * 0.25
-    max_points += weights['legacy_donor_connection']
+                    score += weights['legacy'] * 0.25
+    max_points += weights['legacy']
 
     similarity_percentage = (score / max_points) * 100
     return similarity_percentage
@@ -294,7 +343,7 @@ def compile_entry(post_id, demographics_data, academics_data, majors_data):
 def find_similar_entries(user_id, interested_colleges, major):
     db = initialize_firestore('api/firebase-credentials.json')
     user_info = get_user_info(user_id, db)
-    return str(user_info)
+    #return str(user_info)
     if not user_info:
         return jsonify({"error": "User not found"}), 404
     
@@ -304,7 +353,11 @@ def find_similar_entries(user_id, interested_colleges, major):
     filtered_post_ids_majors = filter_entries_by_major(major, majors_data)
     filtered_post_ids = find_intersection(filtered_post_ids_majors, filtered_post_ids_colleges)
     similar_entries = []
-    #return filtered_post_ids_colleges[1]
+    
+    values = results_data.values()
+    str1 = str(interested_colleges) + " and then " + values[0]
+    return str1
+
     for post_id in filtered_post_ids:
         entry = compile_entry(post_id, demographics_data, academics_data, majors_data)
         similarity = calculate_similarity(user_info, entry)
