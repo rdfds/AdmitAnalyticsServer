@@ -306,7 +306,7 @@ def load_major_categories(csv_file):
 
 def get_major_category(input_major):
     input_major_formatted = input_major.upper().strip().replace(' ', '_')
-    return load_major_categories('api/majors-list.csv').get(input_major_lower, None)
+    return load_major_categories('api/majors-list.csv').get(input_major_formatted, None)
 
 def get_similar_major(input_major):
     major_categories = load_major_categories('api/majors-list.csv')
