@@ -279,12 +279,12 @@ def filter_entries_by_major(user_major, majors_data):
     user_major_category = get_major_category(user_major_normalized)
     
     if not user_major_category:
-        return [1]
+        return []
 
     filtered_post_ids = []
     count = 0
     for result in majors_data.values():
-        post_major = result.get('major', '').strip().lower().replace(' ', '_')
+        post_major = result.get('similar_major', '').strip().lower().replace(' ', '_')
         post_major_category = get_major_category(post_major)
         if post_major_category == user_major_category:
             filtered_post_ids.append(result['post_id'])
