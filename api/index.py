@@ -280,6 +280,7 @@ def filter_entries_by_major(user_major, majors_data):
     #input_major_formatted = user_major.upper().strip().replace(' ', '_')
     #return input_major_formatted, 0
     user_major_category = get_major_category(user_major_normalized)
+    return user_major_category, user_major_normalized
     #return str(user_major_category), str(user_major_category)
     if not user_major_category:
         return [], 0
@@ -308,8 +309,8 @@ def load_major_categories(csv_file):
     return major_categories
 
 def get_major_category(input_major):
-    return load_major_categories('api/majors-list.csv').get(input_major, None)
-    #return load_major_categories('api/majors-list.csv')
+    #return load_major_categories('api/majors-list.csv').get(input_major, None)
+    return load_major_categories('api/majors-list.csv')
 
 def get_similar_major(input_major):
     major_categories = load_major_categories('api/majors-list.csv')
