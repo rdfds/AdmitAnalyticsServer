@@ -282,15 +282,15 @@ def filter_entries_by_major(user_major, majors_data):
         return []
 
     filtered_post_ids = []
-    
+    count = 0
     for result in majors_data.values():
         post_major = result.get('major', '').strip().lower().replace(' ', '_')
         post_major_category = get_major_category(post_major)
-        
         if post_major_category == user_major_category:
             filtered_post_ids.append(result['post_id'])
+            count += 1
     
-    return filtered_post_ids
+    return filtered_post_ids, count
 
 # Load major categories from the CSV file
 def load_major_categories(csv_file):
@@ -361,11 +361,11 @@ def find_similar_entries(user_id, interested_colleges, major):
     
     activities_data, demographics_data, academics_data, majors_data, results_data = get_all_entries(db)
     
-    filtered_post_ids_colleges = filter_entries_by_colleges(interested_colleges, results_data)
+    filtered_post_ids_colleges, count = filter_entries_by_colleges(interested_colleges, results_data)
     filtered_post_ids_majors = filter_entries_by_major(major, majors_data)
     filtered_post_ids = find_intersection(filtered_post_ids_majors, filtered_post_ids_colleges)
     similar_entries = []
-    return str(filtered_post_ids)
+    return str(filtered_post_ids_colleges) + " "  + str(count)
     #str1 = str(interested_colleges) + " and then " + str(results_data)
     #return str1
     #return str(filtered_post_ids_major)
