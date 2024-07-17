@@ -276,8 +276,8 @@ def filter_entries_by_colleges(interested_colleges, results_data):
 
 def filter_entries_by_major(user_major, majors_data):
     user_major_normalized = user_major.strip().lower().replace(' ', '_')
-    input_major_formatted = user_major.upper().strip().replace(' ', '_')
-    return input_major_formatted, 0
+    #input_major_formatted = user_major.upper().strip().replace(' ', '_')
+    #return input_major_formatted, 0
     user_major_category = get_major_category(user_major_normalized)
     
     if not user_major_category:
