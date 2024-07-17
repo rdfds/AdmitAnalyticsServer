@@ -118,7 +118,7 @@ def addUserCollegeInformation():
     # Get the structured list of interested colleges and major
     interested_colleges = get_interested_colleges(college_desc, college_data)
     major = get_similar_major(major)
-    return major
+    #return major
     #return major
     # Update the document with the new information
     doc_ref.update({
