@@ -279,7 +279,7 @@ def filter_entries_by_major(user_major, majors_data):
     user_major_category = get_major_category(user_major_normalized)
     
     if not user_major_category:
-        return []
+        return [1], 0
 
     filtered_post_ids = []
     count = 0
