@@ -301,13 +301,13 @@ def load_major_categories(csv_file):
         reader = csv.reader(file)
         next(reader)  # Skip the header row
         for row in reader:
-            major = row[1].strip().lower()  # Ensure consistent formatting
-            category = row[2].strip()
+            major = row[1].strip().lower().replace(' ', '_')  # Ensure consistent formatting
+            category = row[2].strip().lower().replace(' ', '_')
             major_categories[major] = category
     return major_categories
 
 def get_major_category(input_major):
-    input_major_formatted = input_major.upper().strip().replace(' ', '_')
+    input_major_formatted = input_major.lower().strip().replace(' ', '_')
     return load_major_categories('api/majors-list.csv').get(input_major_formatted, None)
 
 def get_similar_major(input_major):
