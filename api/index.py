@@ -355,8 +355,8 @@ def find_similar_entries(user_id, interested_colleges, major):
     similar_entries = []
     
     str1 = str(interested_colleges) + " and then " + str(results_data)
-    return str1
-
+    #return str1
+    return str(filtered_post_ids_colleges)
     for post_id in filtered_post_ids:
         entry = compile_entry(post_id, demographics_data, academics_data, majors_data)
         similarity = calculate_similarity(user_info, entry)
