@@ -246,28 +246,11 @@ def get_user_info(user_id, db):
         return None
 
 def get_all_entries(db):
-    def fetch_all_documents(collection_name):
-        all_documents = []
-        last_doc = None
-        finished = False
-        while not finished:
-            query = db.collection(collection_name).limit(500)  # Adjust the limit as needed
-            if last_doc:
-                query = query.start_after(last_doc)
-            docs = query.stream()
-            fetched_docs = list(docs)
-            if not fetched_docs:
-                finished = True
-            else:    
-                all_documents.extend(fetched_docs)
-                last_doc = fetched_docs[-1]
-        return all_documents
-
-    activities = fetch_all_documents('activities')
-    demographics = fetch_all_documents('demographics')
-    academics = fetch_all_documents('academics')
-    majors = fetch_all_documents('major')
-    results = fetch_all_documents('results')
+    activities = db.collection('activities').stream()
+    demographics = db.collection('demographics').stream()
+    academics = db.collection('academics').stream()
+    majors = db.collection('major').stream()
+    results = db.collection('results').stream()
     
     activities_data = [doc.to_dict() for doc in activities]
     demographics_data = {doc.id: doc.to_dict() for doc in demographics}
