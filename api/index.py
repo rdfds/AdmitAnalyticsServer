@@ -126,8 +126,8 @@ def addUserCollegeInformation():
         'interested_colleges': interested_colleges
     })
 
-    response = find_similar_entries(user_id, interested_colleges, major)
-    return response
+    top_10_entries = find_similar_entries(user_id, interested_colleges, major)
+    return jsonify(top_10_entries), 200
     # Return a JSON response
     #return jsonify({'status': 'success', 'user_id': user_id, 'major': major, 'college_desc': college_desc}), 200
 
@@ -144,10 +144,11 @@ def load_college_data(csv_file):
 
 def get_interested_colleges(college_desc, college_data):
     completion = client.chat.completions.create(
+        #try to fix this make it work for more descriptions
         model="gpt-4o",
         messages=[
             {"role": "system", "content": "You are a helpful assistant that structures college descriptions."},
-            {"role": "user", "content": f"Given the following description of college preferences: '{college_desc}', and the list of all US colleges, return a list of all the colleges that match the preferences"}
+            {"role": "user", "content": f"Given the following description of college preferences (or list of colleges): '{college_desc}', and the list of all known US colleges, return a list of all the colleges that match the criterea"}
         ],
         functions=[
             {
@@ -190,15 +191,15 @@ def calculate_similarity(user_info, entry):
     # Define the weights for each category
     weights = {
         'race': 15,
-        'income': 7,
-        'fin_aid': 3,
+        'income': 5,
+        'fin_aid': 5,
         'first_gen': 15,
         'urm_status': 15,
         'school_type': 7,
-        'major': 20,
+        'major': 15,
         #'sat_score': 15,
         #'act_score': 15,
-        'course_rigor': 5,
+        #'course_rigor': 5,
         'school_competitiveness': 10,
         'location_competitiveness': 15,
         'legacy': 25
@@ -213,7 +214,7 @@ def calculate_similarity(user_info, entry):
     # Complex attribute checks
     #score += calculate_score(user_info['sat_score'], entry['sat_score'], 100, weights['sat_score'], 0.1)
     #score += calculate_score(user_info['act_score'], entry['act_score'], 4, weights['act_score'], 0.2)
-    score += calculate_score(user_info['course_rigor'], entry['course_rigor'], 1, weights['course_rigor'], 0.5)
+    #score += calculate_score(user_info['course_rigor'], entry['course_rigor'], 1, weights['course_rigor'], 0.5)
     score += calculate_score(user_info['school_competitiveness'], entry['school_competitiveness'], 1, weights['school_competitiveness'], 0.5)
     score += calculate_score(user_info['location_competitiveness'], entry['location_competitiveness'], 2, weights['location_competitiveness'], [0.25, 0.75])
 
@@ -370,7 +371,7 @@ def find_similar_entries(user_id, interested_colleges, major):
     #return str(filtered_post_ids_majors) + " " + str(count)
     #str1 = str(interested_colleges) + " and then " + str(results_data)
     #return str1
-    return str(filtered_post_ids) + " " + str(filtered_post_ids_colleges) + " " + str(count) + " " + str(filtered_post_ids_majors) + " " + str(count2)
+    #return str(filtered_post_ids) + " " + str(filtered_post_ids_colleges) + " " + str(count) + " " + str(filtered_post_ids_majors) + " " + str(count2)
     for post_id in filtered_post_ids:
         entry = compile_entry(post_id, demographics_data, academics_data, majors_data)
         similarity = calculate_similarity(user_info, entry)
@@ -378,11 +379,11 @@ def find_similar_entries(user_id, interested_colleges, major):
     #return similar_entries[0]
     similar_entries.sort(key=lambda x: x[1], reverse=True)
     top_10_entries = similar_entries[:10]
+    return top_10_entries
     
-    # Store the top 20 entries in Firestore
-    #store_data_in_firestore(db, 'similarProfiles', user_id, top_20_entries)
+    # Store the top 10 entries in Firestore
+    store_data_in_firestore(db, 'similarProfiles', user_id, top_20_entries)
     
-    return jsonify(top_10_entries), 200
 
 def find_intersection(college_filtered_ids, major_filtered_ids):
     return list(set(college_filtered_ids) & set(major_filtered_ids))
