@@ -365,24 +365,24 @@ def find_similar_entries(user_id, interested_colleges, major):
     filtered_post_ids_colleges, count = filter_entries_by_colleges(interested_colleges, results_data)
     #return str((majors_data))
     filtered_post_ids_majors, count2 = filter_entries_by_major(major, majors_data)
-    #filtered_post_ids = find_intersection(filtered_post_ids_majors, filtered_post_ids_colleges)
+    filtered_post_ids = find_intersection(filtered_post_ids_majors, filtered_post_ids_colleges)
     similar_entries = []
     #return str(filtered_post_ids_majors) + " " + str(count)
     #str1 = str(interested_colleges) + " and then " + str(results_data)
     #return str1
-    return str(filtered_post_ids_majors) + " " + str(count2)
+    return str(filtered_post_ids)
     for post_id in filtered_post_ids:
         entry = compile_entry(post_id, demographics_data, academics_data, majors_data)
         similarity = calculate_similarity(user_info, entry)
         similar_entries.append((entry, similarity))
     #return similar_entries[0]
     similar_entries.sort(key=lambda x: x[1], reverse=True)
-    top_20_entries = similar_entries[:20]
+    top_10_entries = similar_entries[:10]
     
     # Store the top 20 entries in Firestore
     #store_data_in_firestore(db, 'similarProfiles', user_id, top_20_entries)
     
-    #return jsonify(top_20_entries), 200
+    return jsonify(top_10_entries), 200
 
 def find_intersection(college_filtered_ids, major_filtered_ids):
     return list(set(college_filtered_ids) & set(major_filtered_ids))
