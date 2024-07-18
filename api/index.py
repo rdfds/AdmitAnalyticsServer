@@ -148,7 +148,7 @@ def get_interested_colleges(college_desc, college_data):
         model="gpt-4o",
         messages=[
             {"role": "system", "content": "You are a helpful assistant that structures college descriptions."},
-            {"role": "user", "content": f"Given the following description of college preferences (or list of colleges): '{college_desc}', and the list of all known US colleges, return a list of all the colleges that match the criterea"}
+            {"role": "user", "content": f"Given the following description of college preferences/categories of interest: '{college_desc}', and the list of all known US colleges: '{college_data}', return a list of all the colleges that match the preferences/categories"}
         ],
         functions=[
             {
