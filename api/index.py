@@ -251,7 +251,7 @@ def get_all_entries(db):
         last_doc = None
         finished = False
         while not finished:
-            query = db.collection(collection_name).limit(100)  # Adjust the limit as needed
+            query = db.collection(collection_name).limit(500)  # Adjust the limit as needed
             if last_doc:
                 query = query.start_after(last_doc)
             docs = query.stream()
