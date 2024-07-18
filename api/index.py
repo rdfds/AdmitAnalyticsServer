@@ -375,9 +375,10 @@ def find_similar_entries(user_id, interested_colleges, major):
     #return str(filtered_post_ids) + " " + str(filtered_post_ids_colleges) + " " + str(count) + " " + str(filtered_post_ids_majors) + " " + str(count2)
     for post_id in filtered_post_ids:
         entry = compile_entry(post_id, demographics_data, academics_data, majors_data)
+        return str(entry)
         similarity = calculate_similarity(user_info, entry)
         similar_entries.append((entry, similarity))
-    return str(similar_entries)
+    
     similar_entries.sort(key=lambda x: x[1], reverse=True)
     top_10_entries = similar_entries[:10]
     return top_10_entries
