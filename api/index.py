@@ -292,7 +292,7 @@ def filter_entries_by_major(user_major, majors_data):
         if post_major_category == user_major_category:
             filtered_post_ids.append(result['post_id'])
     
-    return filtered_post_ids
+    return filtered_post_ids, count
 
 # Load major categories from the CSV file
 def load_major_categories(csv_file):
