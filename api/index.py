@@ -248,22 +248,23 @@ def get_user_info(user_id, db):
 def get_all_entries(db):
     def fetch_all_documents(collection_name):
         all_documents = []
-        next_page_token = None
+        last_doc = None
         while True:
-            docs = db.collection(collection_name).stream(page_token=next_page_token)
+            query = db.collection(collection_name).limit(100)  # Adjust the limit as needed
+            if last_doc:
+                query = query.start_after(last_doc)
+            docs = query.stream()
             fetched_docs = list(docs)
             if not fetched_docs:
                 break
             all_documents.extend(fetched_docs)
-            next_page_token = docs.next_page_token if hasattr(docs, 'next_page_token') else None
-            if not next_page_token:
-                break
+            last_doc = fetched_docs[-1]
         return all_documents
 
     activities = fetch_all_documents('activities')
     demographics = fetch_all_documents('demographics')
     academics = fetch_all_documents('academics')
-    majors = fetch_all_documents('majors')
+    majors = fetch_all_documents('major')
     results = fetch_all_documents('results')
     
     activities_data = [doc.to_dict() for doc in activities]
