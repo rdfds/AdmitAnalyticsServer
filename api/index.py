@@ -246,11 +246,25 @@ def get_user_info(user_id, db):
         return None
 
 def get_all_entries(db):
-    activities = db.collection('activities').stream()
-    demographics = db.collection('demographics').stream()
-    academics = db.collection('academics').stream()
-    majors = db.collection('majors').stream()
-    results = db.collection('results').stream()
+    def fetch_all_documents(collection_name):
+        all_documents = []
+        next_page_token = None
+        while True:
+            docs = db.collection(collection_name).stream(page_token=next_page_token)
+            fetched_docs = list(docs)
+            if not fetched_docs:
+                break
+            all_documents.extend(fetched_docs)
+            next_page_token = docs.next_page_token if hasattr(docs, 'next_page_token') else None
+            if not next_page_token:
+                break
+        return all_documents
+
+    activities = fetch_all_documents('activities')
+    demographics = fetch_all_documents('demographics')
+    academics = fetch_all_documents('academics')
+    majors = fetch_all_documents('majors')
+    results = fetch_all_documents('results')
     
     activities_data = [doc.to_dict() for doc in activities]
     demographics_data = {doc.id: doc.to_dict() for doc in demographics}
