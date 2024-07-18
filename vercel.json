@@ -8,7 +8,7 @@
     ],
     "functions": {
         "api/index.py": {
-            "maxDuration": 100
+            "maxDuration": 20
         }
     }
 }
