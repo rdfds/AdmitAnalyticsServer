@@ -311,8 +311,8 @@ def load_major_categories(csv_file):
 def get_major_category(input_major):
     majors_list = load_major_categories('api/majors-list.csv')
     if input_major in majors_list:
-        return True
-    return False
+        return majors_list.get(str(input_major))
+    return "NA"
     #return load_major_categories('api/majors-list.csv')
 
 def get_similar_major(input_major):
