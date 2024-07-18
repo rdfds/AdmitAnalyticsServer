@@ -256,7 +256,6 @@ def get_all_entries(db):
     demographics_data = {doc.id: doc.to_dict() for doc in demographics}
     academics_data = {doc.id: doc.to_dict() for doc in academics}
     majors_data = {doc.id: doc.to_dict() for doc in majors}
-    majors_data = len(majors_data)
     results_data = {doc.id: doc.to_dict() for doc in results}
     
     return activities_data, demographics_data, academics_data, majors_data, results_data
@@ -363,8 +362,8 @@ def find_similar_entries(user_id, interested_colleges, major):
         return jsonify({"error": "User not found"}), 404
     
     activities_data, demographics_data, academics_data, majors_data, results_data = get_all_entries(db)
-    return str(majors_data)
     filtered_post_ids_colleges, count = filter_entries_by_colleges(interested_colleges, results_data)
+    return str(len(majors_data))
     filtered_post_ids_majors, count2 = filter_entries_by_major(major, majors_data)
     #filtered_post_ids = find_intersection(filtered_post_ids_majors, filtered_post_ids_colleges)
     similar_entries = []
