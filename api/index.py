@@ -256,6 +256,7 @@ def get_all_entries(db):
     demographics_data = {doc.id: doc.to_dict() for doc in demographics}
     academics_data = {doc.id: doc.to_dict() for doc in academics}
     #majors_data = {doc.id: doc.to_dict() for doc in majors}
+    count = 0
     for doc in majors:
         count+=1
     majors_data = count
