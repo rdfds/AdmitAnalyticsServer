@@ -184,7 +184,7 @@ def calculate_score(value_user, value_entry, buffer, max_score, reduction_factor
     else:
         return 0
 
-def calculate_similarity(user_info, entry):
+def calculate_similarity(user_info, post_id, demographics_data, academics_data, majors_data):
     score = 0
     max_points = 0
 
@@ -206,21 +206,25 @@ def calculate_similarity(user_info, entry):
     }
     
     # Simple attribute checks
-    for attribute in ['race', 'income', 'fin_aid', 'first_gen', 'urm_status', 'school_type', 'major']:
-        if user_info[attribute] == entry[attribute]:
+    for attribute in ['race', 'income', 'fin_aid', 'first_gen', 'urm_status', 'school_type']:
+        if user_info[attribute].lower().strip().replace(' ', '_') == demographics_data[attribute].lower().strip().replace(' ', '_'):
             score += weights[attribute]
         max_points += weights[attribute]
+
+    if user_info['major'].lower().strip().replace(' ', '_') == majors_data['major'].lower().strip().replace(' ', '_'):
+            score += weights['major']
+        max_points += weights[major]
 
     # Complex attribute checks
     #score += calculate_score(user_info['sat_score'], entry['sat_score'], 100, weights['sat_score'], 0.1)
     #score += calculate_score(user_info['act_score'], entry['act_score'], 4, weights['act_score'], 0.2)
     #score += calculate_score(user_info['course_rigor'], entry['course_rigor'], 1, weights['course_rigor'], 0.5)
-    score += calculate_score(user_info['school_competitiveness'], entry['school_competitiveness'], 1, weights['school_competitiveness'], 0.5)
-    score += calculate_score(user_info['location_competitiveness'], entry['location_competitiveness'], 2, weights['location_competitiveness'], [0.25, 0.75])
+    score += calculate_score(user_info['school_competitiveness'], demographics_data['school_competitiveness'], 1, weights['school_competitiveness'], 0.5)
+    score += calculate_score(user_info['location_competitiveness'], demographics_data['location_competitiveness'], 2, weights['location_competitiveness'], [0.25, 0.75])
 
     # Legacy check
     user_legacy = user_info['legacy']
-    entry_legacy = entry['legacy']
+    entry_legacy = demographics_data['legacy']
     for u_legacy in user_legacy:
         for e_legacy in entry_legacy:
             u_num, u_school = u_legacy.split('-')
@@ -350,7 +354,7 @@ def get_similar_major(input_major):
 
 def compile_entry(post_id, demographics_data, academics_data, majors_data):
     entry = {}
-    entry.update(demographics_data[post_id])
+    entry.update("demographics" : demographics_data[post_id])
     entry.update(academics_data[post_id])
     entry.update(majors_data[post_id])
     return entry
@@ -373,10 +377,10 @@ def find_similar_entries(user_id, interested_colleges, major):
     #return str1
     #return str(filtered_post_ids) + " " + str(filtered_post_ids_colleges) + " " + str(count) + " " + str(filtered_post_ids_majors) + " " + str(count2)
     for post_id in filtered_post_ids:
+        similarity = calculate_similarity(user_info, post_id, demographics_data, academics_data, majors_data)
+        return str(similarity)
         entry = compile_entry(post_id, demographics_data, academics_data, majors_data)
-        return str(entry)
-        similarity = calculate_similarity(user_info, entry)
-        similar_entries.append((entry, similarity))
+        similar_entries.append((post_id, similarity))
     
     similar_entries.sort(key=lambda x: x[1], reverse=True)
     top_10_entries = similar_entries[:10]
