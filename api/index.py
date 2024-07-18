@@ -205,13 +205,33 @@ def calculate_similarity(user_info, post_id, demographics_data, academics_data, 
         'legacy': 25
     }
     
+    demographics_list = []
     # Simple attribute checks
+    for result in demographics_data.values():
+        if result.get('post_id') == post_id:
+            demographics_list.append() = result.get('race')
+            demographics_list.append() = result.get('family_income_level')
+            demographics_list.append() = result.get('requesting_finanacial_aid')
+            demographics_list.append() = result.get('first_generation')
+            demographics_list.append() = result.get('underrepresented_minority_status')
+            demographics_list.append() = result.get('school_type')
+            demographics_list.append() = result.get('school_competitiveness')
+            demographics_list.append() = result.get('location_competitiveness')
+            demographics_list.append() = result.get('legacy')
+
+    count = 0
     for attribute in ['race', 'income', 'fin_aid', 'first_gen', 'urm_status', 'school_type']:
-        if user_info[attribute].lower().strip().replace(' ', '_') == demographics_data[attribute].lower().strip().replace(' ', '_'):
+        if user_info[attribute].lower().strip().replace(' ', '_') == demographics_list[count].lower().strip().replace(' ', '_'):
             score += weights[attribute]
         max_points += weights[attribute]
+        count += 1
 
-    if user_info['major'].lower().strip().replace(' ', '_') == majors_data['major'].lower().strip().replace(' ', '_'):
+    # Simple attribute checks
+    for result in majors_data.values():
+        if result.get('post_id') == post_id:
+            major = result.get('similar_major')
+
+    if user_info['major'].lower().strip().replace(' ', '_') == major.lower().strip().replace(' ', '_'):
         score += weights['major']
     max_points += weights[major]
 
@@ -219,12 +239,12 @@ def calculate_similarity(user_info, post_id, demographics_data, academics_data, 
     #score += calculate_score(user_info['sat_score'], entry['sat_score'], 100, weights['sat_score'], 0.1)
     #score += calculate_score(user_info['act_score'], entry['act_score'], 4, weights['act_score'], 0.2)
     #score += calculate_score(user_info['course_rigor'], entry['course_rigor'], 1, weights['course_rigor'], 0.5)
-    score += calculate_score(user_info['school_competitiveness'], demographics_data['school_competitiveness'], 1, weights['school_competitiveness'], 0.5)
-    score += calculate_score(user_info['location_competitiveness'], demographics_data['location_competitiveness'], 2, weights['location_competitiveness'], [0.25, 0.75])
+    score += calculate_score(user_info['school_competitiveness'], demographics_list[6], 1, weights['school_competitiveness'], 0.5)
+    score += calculate_score(user_info['location_competitiveness'], demographics_list[7], 2, weights['location_competitiveness'], [0.25, 0.75])
 
     # Legacy check
     user_legacy = user_info['legacy']
-    entry_legacy = demographics_data['legacy']
+    entry_legacy = demographics_list[8]
     for u_legacy in user_legacy:
         for e_legacy in entry_legacy:
             u_num, u_school = u_legacy.split('-')
