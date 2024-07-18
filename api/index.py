@@ -267,12 +267,12 @@ def filter_entries_by_colleges(interested_colleges, results_data):
     normalized_interested_colleges = [college.strip().lower().replace(' ', '_') for college in interested_colleges]
     count = 0
     for result in results_data.values():
+        count += 1
         accepted_colleges = result.get('accepted_colleges', [])
         normalized_accepted_colleges = [college.strip().lower().replace(' ', '_') for college in accepted_colleges]
         
         if any(college in normalized_accepted_colleges for college in normalized_interested_colleges):
             filtered_post_ids.append(result['post_id'])
-            count += 1
     return filtered_post_ids, count
 
 def filter_entries_by_major(user_major, majors_data):
@@ -370,7 +370,7 @@ def find_similar_entries(user_id, interested_colleges, major):
     #return str(filtered_post_ids_majors) + " " + str(count)
     #str1 = str(interested_colleges) + " and then " + str(results_data)
     #return str1
-    return str(filtered_post_ids)
+    return str(filtered_post_ids) + " " + str(filtered_post_ids_colleges) + " " + str(count) + " " + str(filtered_post_ids_majors) + " " + str(count2)
     for post_id in filtered_post_ids:
         entry = compile_entry(post_id, demographics_data, academics_data, majors_data)
         similarity = calculate_similarity(user_info, entry)
