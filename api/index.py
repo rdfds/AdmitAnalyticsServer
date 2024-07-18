@@ -255,11 +255,8 @@ def get_all_entries(db):
     activities_data = [doc.to_dict() for doc in activities]
     demographics_data = {doc.id: doc.to_dict() for doc in demographics}
     academics_data = {doc.id: doc.to_dict() for doc in academics}
-    #majors_data = {doc.id: doc.to_dict() for doc in majors}
-    count = 0
-    for doc in majors:
-        count+=1
-    majors_data = count
+    majors_data = {doc.id: doc.to_dict() for doc in majors}
+    majors_data = len(majors_data)
     results_data = {doc.id: doc.to_dict() for doc in results}
     
     return activities_data, demographics_data, academics_data, majors_data, results_data
