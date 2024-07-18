@@ -249,16 +249,18 @@ def get_all_entries(db):
     def fetch_all_documents(collection_name):
         all_documents = []
         last_doc = None
-        while True:
+        finished = False
+        while not finished:
             query = db.collection(collection_name).limit(100)  # Adjust the limit as needed
             if last_doc:
                 query = query.start_after(last_doc)
             docs = query.stream()
             fetched_docs = list(docs)
             if not fetched_docs:
-                break
-            all_documents.extend(fetched_docs)
-            last_doc = fetched_docs[-1]
+                finished = True
+            else:    
+                all_documents.extend(fetched_docs)
+                last_doc = fetched_docs[-1]
         return all_documents
 
     activities = fetch_all_documents('activities')
