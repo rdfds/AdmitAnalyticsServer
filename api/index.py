@@ -280,10 +280,8 @@ def filter_entries_by_major(user_major, majors_data):
     #input_major_formatted = user_major.upper().strip().replace(' ', '_')
     #return input_major_formatted, 0
     user_major_category = get_major_category(user_major_normalized)
-    return user_major_category
-    #return str(user_major_category), str(user_major_category)
     if not user_major_category:
-        return [], 0
+        return []
 
     filtered_post_ids = []
     count = 0
@@ -292,9 +290,8 @@ def filter_entries_by_major(user_major, majors_data):
         post_major_category = get_major_category(post_major)
         if post_major_category == user_major_category:
             filtered_post_ids.append(result['post_id'])
-            count += 1
     
-    return filtered_post_ids, count
+    return filtered_post_ids
 
 # Load major categories from the CSV file
 def load_major_categories(csv_file):
@@ -310,10 +307,7 @@ def load_major_categories(csv_file):
 
 def get_major_category(input_major):
     majors_list = load_major_categories('api/majors-list.csv')
-    if input_major in majors_list:
-        return majors_list.get(str(input_major))
-    return "NA"
-    #return load_major_categories('api/majors-list.csv')
+    return majors_list.get(str(input_major))
 
 def get_similar_major(input_major):
     major_categories = load_major_categories('api/majors-list.csv')
