@@ -209,15 +209,15 @@ def calculate_similarity(user_info, post_id, demographics_data, academics_data, 
     # Simple attribute checks
     for result in demographics_data.values():
         if result.get('post_id') == post_id:
-            demographics_list.append() = result.get('race')
-            demographics_list.append() = result.get('family_income_level')
-            demographics_list.append() = result.get('requesting_finanacial_aid')
-            demographics_list.append() = result.get('first_generation')
-            demographics_list.append() = result.get('underrepresented_minority_status')
-            demographics_list.append() = result.get('school_type')
-            demographics_list.append() = result.get('school_competitiveness')
-            demographics_list.append() = result.get('location_competitiveness')
-            demographics_list.append() = result.get('legacy')
+            demographics_list.append(result.get('race'))
+            demographics_list.append(result.get('family_income_level')) 
+            demographics_list.append(result.get('requesting_finanacial_aid'))
+            demographics_list.append(result.get('first_generation'))
+            demographics_list.append(result.get('underrepresented_minority_status'))
+            demographics_list.append(result.get('school_type'))
+            demographics_list.append(result.get('school_competitiveness'))
+            demographics_list.append(result.get('location_competitiveness'))
+            demographics_list.append(result.get('legacy'))
 
     count = 0
     for attribute in ['race', 'income', 'fin_aid', 'first_gen', 'urm_status', 'school_type']:
