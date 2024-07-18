@@ -354,7 +354,7 @@ def get_similar_major(input_major):
 
 def compile_entry(post_id, demographics_data, academics_data, majors_data):
     entry = {}
-    entry.update("demographics" : demographics_data[post_id])
+    entry.update(demographics_data[post_id])
     entry.update(academics_data[post_id])
     entry.update(majors_data[post_id])
     return entry
@@ -379,7 +379,7 @@ def find_similar_entries(user_id, interested_colleges, major):
     for post_id in filtered_post_ids:
         similarity = calculate_similarity(user_info, post_id, demographics_data, academics_data, majors_data)
         return str(similarity)
-        entry = compile_entry(post_id, demographics_data, academics_data, majors_data)
+        #entry = compile_entry(post_id, demographics_data, academics_data, majors_data)
         similar_entries.append((post_id, similarity))
     
     similar_entries.sort(key=lambda x: x[1], reverse=True)
