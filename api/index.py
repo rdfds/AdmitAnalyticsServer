@@ -369,7 +369,7 @@ def find_similar_entries(user_id, interested_colleges, major):
     filtered_post_ids_majors, count2 = filter_entries_by_major(major, majors_data)
     filtered_post_ids = find_intersection(filtered_post_ids_majors, filtered_post_ids_colleges)
     similar_entries = []
-    #return str(filtered_post_ids_majors) + " "  + str(count2)
+    return str(filtered_post_ids_majors) + " "  + str(count2)
     #str1 = str(interested_colleges) + " and then " + str(results_data)
     #return str1
     return str(filtered_post_ids_majors)
