@@ -249,19 +249,20 @@ def calculate_similarity(user_info, post_id, demographics_data, academics_data, 
     # Legacy check
     user_legacy = user_info['legacy']
     entry_legacy = demographics_list[8]
-    for u_legacy in user_legacy:
-        for e_legacy in entry_legacy:
-            u_num, u_school = u_legacy.split('-')
-            e_num, e_school = e_legacy.split('-')
-            if u_school == e_school:
-                num_diff = abs(int(u_num) - int(e_num))
-                if num_diff == 0:
-                    score += weights['legacy']
-                elif num_diff == 1:
-                    score += weights['legacy'] * 0.5
-                elif num_diff == 2:
-                    score += weights['legacy'] * 0.25
-    max_points += weights['legacy']
+    if "-" in user_legacy and "-" in entry_legacy:
+        for u_legacy in user_legacy:
+            for e_legacy in entry_legacy:
+                u_num, u_school = u_legacy.split('-')
+                e_num, e_school = e_legacy.split('-')
+                if u_school == e_school:
+                    num_diff = abs(int(u_num) - int(e_num))
+                    if num_diff == 0:
+                        score += weights['legacy']
+                    elif num_diff == 1:
+                        score += weights['legacy'] * 0.5
+                    elif num_diff == 2:
+                        score += weights['legacy'] * 0.25
+        max_points += weights['legacy']
 
     similarity_percentage = (score / max_points) * 100
     return similarity_percentage
