@@ -222,13 +222,11 @@ def calculate_similarity(user_info, post_id, demographics_data, academics_data, 
 
     #return str(demographics_list) + post_id + " " + str(idx)
     score = 0
-    count = 0
     for attribute in ['race', 'income', 'fin_aid', 'first_gen', 'urm_status', 'school_type']:
         if user_info[attribute] != "-1" and demographics_list[count] != "-1":
             if user_info[attribute].lower().strip().replace(' ', '_') == demographics_list[count].lower().strip().replace(' ', '_'):
                 score += weights[attribute]
-            max_points += weights[attribute]
-            count += 1
+        max_points += weights[attribute]
 
     # Simple attribute checks
     for result in majors_data.values():
@@ -238,7 +236,7 @@ def calculate_similarity(user_info, post_id, demographics_data, academics_data, 
     if result.get('post_id') != "-1" and demographics_list[count] != "-1":
         if user_info['major'].lower().strip().replace(' ', '_') == major.lower().strip().replace(' ', '_'):
             score += weights['major']
-        max_points += weights['major']
+    max_points += weights['major']
 
     # Complex attribute checks
     #score += calculate_score(user_info['sat_score'], entry['sat_score'], 100, weights['sat_score'], 0.1)
@@ -247,9 +245,12 @@ def calculate_similarity(user_info, post_id, demographics_data, academics_data, 
     #competitveness typo in userdata table
     if user_info['school_competitveness'] != "-1" and demographics_list[6] != "-1":
         score += calculate_score(int(user_info['school_competitveness']), int(demographics_list[6]), 1, weights['school_competitiveness'], 0.5)
-    
+    max_points += weights['major']
+
+
     if user_info['location_competitiveness'] != "-1" and demographics_list[7] != "-1":
         score += calculate_score(int(user_info['location_competitiveness']), int(demographics_list[7]), 2, weights['location_competitiveness'], 0.5)
+    max_points += weights['major']
 
     # Legacy check
     user_legacy = user_info['legacy']
