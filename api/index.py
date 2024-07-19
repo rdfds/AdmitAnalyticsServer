@@ -229,8 +229,6 @@ def calculate_similarity(user_info, post_id, demographics_data, academics_data, 
         max_points += weights[attribute]
         count += 1
 
-    return str(demographics_list) + str(score) + str(user_info)
-
     # Simple attribute checks
     for result in majors_data.values():
         if result.get('post_id') == post_id:
@@ -247,6 +245,8 @@ def calculate_similarity(user_info, post_id, demographics_data, academics_data, 
     #competitveness typo in userdata table
     score += calculate_score(int(user_info['school_competitveness']), int(demographics_list[6]), 1, weights['school_competitiveness'], 0.5)
     score += calculate_score(int(user_info['location_competitiveness']), int(demographics_list[7]), 2, weights['location_competitiveness'], [0.25, 0.75])
+
+    return str(demographics_list) + str(score) + str(user_info)
 
     # Legacy check
     user_legacy = user_info['legacy']
