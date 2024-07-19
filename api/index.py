@@ -221,7 +221,7 @@ def calculate_similarity(user_info, post_id, demographics_data, academics_data, 
             demographics_list.append(result.get('legacy_donor_connection'))
 
     #return str(demographics_list) + post_id + " " + str(idx)
-
+    score = 0
     count = 0
     for attribute in ['race', 'income', 'fin_aid', 'first_gen', 'urm_status', 'school_type']:
         if user_info[attribute].lower().strip().replace(' ', '_') == demographics_list[count].lower().strip().replace(' ', '_'):
@@ -229,8 +229,8 @@ def calculate_similarity(user_info, post_id, demographics_data, academics_data, 
         max_points += weights[attribute]
         count += 1
 
-    return score
-    
+    return str(demographics_list) + str(score)
+
     # Simple attribute checks
     for result in majors_data.values():
         if result.get('post_id') == post_id:
