@@ -249,7 +249,7 @@ def calculate_similarity(user_info, post_id, demographics_data, academics_data, 
         score += calculate_score(int(user_info['school_competitveness']), int(demographics_list[6]), 1, weights['school_competitiveness'], 0.5)
     
     if user_info['location_competitiveness'] != "-1" and demographics_list[7] != "-1":
-        score += calculate_score(int(user_info['location_competitiveness']), int(demographics_list[7]), 2, weights['location_competitiveness'], [0.25, 0.75])
+        score += calculate_score(int(user_info['location_competitiveness']), int(demographics_list[7]), 2, weights['location_competitiveness'], 0.5)
 
     # Legacy check
     user_legacy = user_info['legacy']
