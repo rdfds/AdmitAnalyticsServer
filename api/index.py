@@ -229,7 +229,7 @@ def calculate_similarity(user_info, post_id, demographics_data, academics_data, 
         max_points += weights[attribute]
         count += 1
 
-    return str(demographics_list) + str(score)
+    return str(demographics_list) + str(score) + str(user_info)
 
     # Simple attribute checks
     for result in majors_data.values():
