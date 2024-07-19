@@ -243,8 +243,8 @@ def calculate_similarity(user_info, post_id, demographics_data, academics_data, 
     #score += calculate_score(user_info['act_score'], entry['act_score'], 4, weights['act_score'], 0.2)
     #score += calculate_score(user_info['course_rigor'], entry['course_rigor'], 1, weights['course_rigor'], 0.5)
     #competitveness typo in userdata table
-    score += calculate_score(user_info['school_competitveness'], demographics_list[6], 1, weights['school_competitiveness'], 0.5)
-    score += calculate_score(user_info['location_competitiveness'], demographics_list[7], 2, weights['location_competitiveness'], [0.25, 0.75])
+    score += calculate_score(int(user_info['school_competitveness']), int(demographics_list[6]), 1, weights['school_competitiveness'], 0.5)
+    score += calculate_score(int(user_info['location_competitiveness']), int(demographics_list[7]), 2, weights['location_competitiveness'], [0.25, 0.75])
 
     # Legacy check
     user_legacy = user_info['legacy']
