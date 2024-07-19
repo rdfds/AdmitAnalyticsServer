@@ -229,6 +229,8 @@ def calculate_similarity(user_info, post_id, demographics_data, academics_data, 
         max_points += weights[attribute]
         count += 1
 
+    return score
+    
     # Simple attribute checks
     for result in majors_data.values():
         if result.get('post_id') == post_id:
