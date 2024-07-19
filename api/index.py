@@ -236,7 +236,7 @@ def calculate_similarity(user_info, post_id, demographics_data, academics_data, 
 
     if user_info['major'].lower().strip().replace(' ', '_') == major.lower().strip().replace(' ', '_'):
         score += weights['major']
-    max_points += weights[major]
+    max_points += weights['major']
 
     # Complex attribute checks
     #score += calculate_score(user_info['sat_score'], entry['sat_score'], 100, weights['sat_score'], 0.1)
