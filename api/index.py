@@ -222,11 +222,13 @@ def calculate_similarity(user_info, post_id, demographics_data, academics_data, 
 
     #return str(demographics_list) + post_id + " " + str(idx)
     score = 0
+    count = 0
     for attribute in ['race', 'income', 'fin_aid', 'first_gen', 'urm_status', 'school_type']:
         if user_info[attribute] != "-1" and demographics_list[count] != "-1":
             if user_info[attribute].lower().strip().replace(' ', '_') == demographics_list[count].lower().strip().replace(' ', '_'):
                 score += weights[attribute]
         max_points += weights[attribute]
+        count += 1
 
     # Simple attribute checks
     for result in majors_data.values():
