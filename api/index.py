@@ -220,7 +220,7 @@ def calculate_similarity(user_info, post_id, demographics_data, academics_data, 
             demographics_list.append(result.get('location_competitiveness'))
             demographics_list.append(result.get('legacy'))
 
-    #return str(demographics_list) + post_id + " " + idx
+    return str(demographics_list) + post_id + " " + str(idx)
 
     count = 0
     for attribute in ['race', 'income', 'fin_aid', 'first_gen', 'urm_status', 'school_type']:
