@@ -43,7 +43,7 @@ def processUserInformation():
     store_data_in_firestore(db, collection_name, document_id, data)
     
     # Return a JSON response
-    return jsonify(data), 200
+    return "success"
 
 def get_area_difficulty(location):
     client = OpenAI(
@@ -126,7 +126,8 @@ def addUserCollegeInformation():
         'interested_colleges': interested_colleges
     })
 
-    return 200
+    return "success"
+
     # Return a JSON response
     #return jsonify({'status': 'success', 'user_id': user_id, 'major': major, 'college_desc': college_desc}), 200
 
