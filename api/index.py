@@ -427,7 +427,7 @@ def find_similar_entries():
     top_10_entries = similar_entries[:10]
 
     # Store the top 10 entries in Firestore
-    store_data_in_firestore(db, 'similarProfiles', user_id, top_20_entries)
+    store_data_in_firestore(db, 'similarProfiles', user_id, top_10_entries)
 
     return jsonify(top_10_entries)
     
