@@ -393,7 +393,8 @@ def compile_entry(post_id, demographics_data, academics_data, majors_data):
     return entry
 
 @app.route("/findsimilarapplicants")
-def find_similar_entries(user_id):
+def find_similar_entries():
+    user_id = request.args.get('user_id')
     db = initialize_firestore('api/firebase-credentials.json')
     user_info = get_user_info(user_id, db)
     interested_colleges = user_info['interested_colleges']
