@@ -126,7 +126,7 @@ def addUserCollegeInformation():
         'interested_colleges': interested_colleges
     })
 
-    top_10_entries = find_similar_entries(user_id, interested_colleges, major)
+    top_10_entries = find_similar_entries(user_id)
     return jsonify(top_10_entries), 200
     # Return a JSON response
     #return jsonify({'status': 'success', 'user_id': user_id, 'major': major, 'college_desc': college_desc}), 200
@@ -392,9 +392,11 @@ def compile_entry(post_id, demographics_data, academics_data, majors_data):
     entry.update(majors_data[post_id])
     return entry
 
-def find_similar_entries(user_id, interested_colleges, major):
+def find_similar_entries(user_id):
     db = initialize_firestore('api/firebase-credentials.json')
     user_info = get_user_info(user_id, db)
+    interested_colleges = user_info['interested_colleges']
+    major = user_info['major']
     #return str(user_info)
     if not user_info:
         return jsonify({"error": "User not found"}), 404
