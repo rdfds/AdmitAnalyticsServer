@@ -392,6 +392,7 @@ def compile_entry(post_id, demographics_data, academics_data, majors_data):
     entry.update(majors_data[post_id])
     return entry
 
+@app.route("/findsimilarapplicants")
 def find_similar_entries(user_id):
     db = initialize_firestore('api/firebase-credentials.json')
     user_info = get_user_info(user_id, db)
@@ -423,10 +424,12 @@ def find_similar_entries(user_id):
     
     similar_entries.sort(key=lambda x: x[1], reverse=True)
     top_10_entries = similar_entries[:10]
-    return top_10_entries
-    
+
     # Store the top 10 entries in Firestore
     store_data_in_firestore(db, 'similarProfiles', user_id, top_20_entries)
+
+    return jsonify(top_10_entries)
+    
     
 
 def find_intersection(college_filtered_ids, major_filtered_ids):
