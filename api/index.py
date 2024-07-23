@@ -436,16 +436,25 @@ def find_similar_entries():
     for entry in top_10_entries:
         post_id = entry[0]
         similarity_score = entry[1]
-        demographics_info = demographics_data.get(post_id, {})
-        detailed_entry = {
-            "post_id": post_id,
-            "similarity_score": similarity_score,
-            **demographics_info
-        }
-        detailed_top_10_entries.append(detailed_entry)
+        for result in demographics_data.values():
+            if result.get('post_id') == post_id:
+                detailed_entry = {
+                    "post_id": post_id,
+                    "similarity_score": similarity_score,
+                    "race": result.get('race')
+                    "family_income_level" : result.get("family_income_level")
+                    "first_generation" : result.get("first_generation")
+                    "underrepresented_minority_status" : result.get("underrepresented_minority_status")
+                    "school_type" : result.get("school_type")
+                    "requesting_financial_aid" : result.get("requesting_financial_aid")
+                    "school_competitiveness" : result.get("school_competitiveness")
+                    "location_competitiveness" : result.get("location_competitiveness")
+                    "legacy_donor_connection" : result.get("legacy_donor_connection")
+                }
+                detailed_top_10_entries.append(detailed_entry)
 
     return jsonify(demographics_info)
-    
+
     
     
 
