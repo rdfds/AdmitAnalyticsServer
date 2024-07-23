@@ -458,7 +458,7 @@ def find_similar_entries():
                 detailed_entry = {
                     "major" : result.get('similar_major')
                 }
-                detailed_top_10_entries.append(detailed_entry)
+                detailed_top_10_entries.update(detailed_entry)
 
 
 
