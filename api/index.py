@@ -433,10 +433,11 @@ def find_similar_entries():
     store_data_in_firestore(db, 'similarProfiles', user_id, entries_dict)
     # Prepare JSON object to be returned
     detailed_top_10_entries = []
+    idx = 0
     for entry in top_10_entries:
+        idx += 1
         post_id = entry[0]
         similarity_score = entry[1]
-        idx = 1
         for result in demographics_data.values():
             if result.get('post_id') == post_id:
                 detailed_entry = {
@@ -461,7 +462,7 @@ def find_similar_entries():
                         detailed_entry.update(major_entry)
                             
                 detailed_top_10_entries.append(detailed_entry)
-                idx += 1
+
 
 
 
