@@ -440,7 +440,7 @@ def find_similar_entries():
         for result in demographics_data.values():
             if result.get('post_id') == post_id:
                 detailed_entry = {
-                    "student_number": str(idx)
+                    "student_number": str(idx),
                     "post_id": post_id,
                     "similarity_score": similarity_score,
                     "race": result.get('race'),
