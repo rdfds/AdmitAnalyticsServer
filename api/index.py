@@ -444,7 +444,8 @@ def find_similar_entries():
         }
         detailed_top_10_entries.append(detailed_entry)
 
-    return jsonify(detailed_top_10_entries)
+    return jsonify(demographics_info)
+    
     
     
 
