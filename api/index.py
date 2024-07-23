@@ -453,7 +453,10 @@ def find_similar_entries():
                 }
                 for result in majors_data.values():
                     if result.get('post_id') == post_id:
-                        detailed_entry.update("major" : result.get('similar_major'))
+                        major_entry = {
+                            "major" : result.get('similar_major')
+                        }
+                        detailed_entry.update(major_entry)
                             
                 detailed_top_10_entries.append(detailed_entry)
 
