@@ -436,9 +436,11 @@ def find_similar_entries():
     for entry in top_10_entries:
         post_id = entry[0]
         similarity_score = entry[1]
+        idx = 1
         for result in demographics_data.values():
             if result.get('post_id') == post_id:
                 detailed_entry = {
+                    "student_number": str(idx)
                     "post_id": post_id,
                     "similarity_score": similarity_score,
                     "race": result.get('race'),
@@ -459,6 +461,7 @@ def find_similar_entries():
                         detailed_entry.update(major_entry)
                             
                 detailed_top_10_entries.append(detailed_entry)
+                idx += 1
 
 
 
