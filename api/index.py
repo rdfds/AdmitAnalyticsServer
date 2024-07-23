@@ -451,14 +451,11 @@ def find_similar_entries():
                     "location_competitiveness" : result.get("location_competitiveness"),
                     "legacy_donor_connection" : result.get("legacy_donor_connection")
                 }
+                for result in majors_data.values():
+                    if result.get('post_id') == post_id:
+                        detailed_entry.update("major" : result.get('similar_major'))
+                            
                 detailed_top_10_entries.append(detailed_entry)
-
-        for result in majors_data.values():
-            if result.get('post_id') == post_id:
-                detailed_entry = {
-                    "major" : result.get('similar_major')
-                }
-                detailed_top_10_entries.update(detailed_entry)
 
 
 
