@@ -528,7 +528,7 @@ def get_all_applicant_info():
 
     idx = 1
     activities_entry = {}
-    
+
     for result in activities_data:
         if result.get('post_id') == post_id:
             activities_entry["activity_" + str(idx)] = {
@@ -551,7 +551,7 @@ def get_all_applicant_info():
                 "accepted_colleges" : result.get('accepted_colleges'),
                 "rejected_colleges" : result.get('rejected_colleges')
             }
-            detailed_entry.update(academics_entry)
+            detailed_entry.update(results_entry)
 
     return jsonify(detailed_entry)
 
