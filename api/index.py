@@ -528,7 +528,7 @@ def get_all_applicant_info():
 
     idx = 1
 
-    for result in activities_data.values():
+    for result in activities_data:
         if result.get('post_id') == post_id:
             activities_entry["activity_" + str(idx)] = {
                 "activity" : result.get('activity'),
