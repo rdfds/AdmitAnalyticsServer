@@ -477,7 +477,8 @@ def get_all_applicant_info():
 
     # Initialize Firestore
     db = initialize_firestore('api/firebase-credentials.json')
-    
+    activities_data, demographics_data, academics_data, majors_data, results_data = get_all_entries(db)
+
     # Fetch the similar profiles document for the given user_id
     similar_profiles_ref = db.collection('similarProfiles').document(user_id)
     similar_profiles_doc = similar_profiles_ref.get()
