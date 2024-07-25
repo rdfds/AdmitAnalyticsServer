@@ -498,7 +498,6 @@ def get_all_applicant_info():
             detailed_entry = {
                 "student_number": student_number,
                 "post_id": post_id,
-                "similarity_score": similarity_score,
                 "race": result.get('race'),
                 "family_income_level" : result.get("family_income_level"),
                 "first_generation" : result.get("first_generation"),
