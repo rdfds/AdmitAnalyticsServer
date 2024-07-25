@@ -426,11 +426,10 @@ def find_similar_entries():
     similar_entries.sort(key=lambda x: x[1], reverse=True)
     top_10_entries = similar_entries[:10]
 
-    # Prepare data to be stored in Firestore
-    entries_dict = {f'match_{i+1}': {"post_id": entry[0], "similarity_score": entry[1]} for i, entry in enumerate(top_10_entries)}
     
     # Prepare JSON object to be returned
     detailed_top_10_entries = []
+    detailed_top_10_entries_dict = {}
     idx = 0
     for entry in top_10_entries:
         idx += 1
@@ -458,12 +457,12 @@ def find_similar_entries():
                             "major" : result.get('similar_major')
                         }
                         detailed_entry.update(major_entry)
-                            
+                
+                detailed_top_10_entries_dict['match_' + str(idx)] = detailed_entry
                 detailed_top_10_entries.append(detailed_entry)
 
-
     # Store the top 10 entries in Firestore
-    store_data_in_firestore(db, 'similarProfiles', user_id, detailed_top_10_entries)
+    store_data_in_firestore(db, 'similarProfiles', user_id, detailed_top_10_entries_dict)
 
     return jsonify(detailed_top_10_entries)
 
