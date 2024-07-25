@@ -470,22 +470,6 @@ def find_similar_entries():
 def find_intersection(college_filtered_ids, major_filtered_ids):
     return list(set(college_filtered_ids) & set(major_filtered_ids))
 
-def initialize_firestore(credentials_path):
-    # Set the environment variable for the Firestore credentials
-    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credentials_path
-    # Initialize Firestore client
-    db = firestore.Client()
-    return db
-
-def store_data_in_firestore(db, collection_name, document_id, data):
-    # Get a reference to the collection
-    collection_ref = db.collection(collection_name)
-    # Create or update a document with the specified ID
-    doc_ref = collection_ref.document(document_id)
-    # Set the data in the document
-    doc_ref.set(data)
-    print(f'Data stored in collection: {collection_name}, document ID: {document_id}')
-
 @app.route("/getallapplicantinfo")
 def get_all_applicant_info():
     user_id = request.args.get("user_id")
@@ -508,8 +492,81 @@ def get_all_applicant_info():
         if match_key in similar_profiles_data:
             post_id = similar_profiles_data[match_key].get('post_id')
 
-        return post_id
+    for result in demographics_data.values():
+        if result.get('post_id') == post_id:
+            detailed_entry = {
+                "student_number": str(idx),
+                "post_id": post_id,
+                "similarity_score": similarity_score,
+                "race": result.get('race'),
+                "family_income_level" : result.get("family_income_level"),
+                "first_generation" : result.get("first_generation"),
+                "underrepresented_minority_status" : result.get("underrepresented_minority_status"),
+                "school_type" : result.get("school_type"),
+                "requesting_financial_aid" : result.get("requesting_financial_aid"),
+                "school_competitiveness" : result.get("school_competitiveness"),
+                "location_competitiveness" : result.get("location_competitiveness"),
+                "legacy_donor_connection" : result.get("legacy_donor_connection")
+            }
+
+    for result in majors_data.values():
+        if result.get('post_id') == post_id:
+            major_entry = {
+                "major" : result.get('similar_major')
+            }
+            detailed_entry.update(major_entry)
+
+    for result in academics_data.values():
+        if result.get('post_id') == post_id:
+            academics_entry = {
+                "act_score" : result.get('act_score'),
+                "sat_score" : result.get('sat_score'),
+                "gpa" : result.get('gpa'),
+                "course_rigor" : result.get('course_rigor')
+            }
+            detailed_entry.update(academics_entry)
+
+    idx = 1
+
+    for result in activities_data.values():
+        if result.get('post_id') == post_id:
+            activities_entry["activity_" + str(idx)] = {
+                "activity" : result.get('activity'),
+                "category_tags" : result.get('category_tags'),
+                "diversity_uniqueness_score" : result.get('diversity_uniqueness_score'),
+                "leadership_initiative_score" : result.get('leadership_initiative_score'),
+                "saturation_of_broader_category" : result.get('saturation_of_broader_category'),
+                "scale_impact_reach_score" : result.get('scale_impact_reach_score'),
+                "school_hook" : result.get('school_hook')
+            }
+
+            idx+= 1
+
+            detailed_entry.update(activities_entry)
+
+    for result in results_data.values():
+        if result.get('post_id') == post_id:
+            results_entry = {
+                "accepted_colleges" : result.get('accepted_colleges'),
+                "rejected_colleges" : result.get('rejected_colleges')
+            }
+            detailed_entry.update(academics_entry)
+
+    return jsonify(detailed_entry)
 
 
+def initialize_firestore(credentials_path):
+    # Set the environment variable for the Firestore credentials
+    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credentials_path
+    # Initialize Firestore client
+    db = firestore.Client()
+    return db
 
-
+def store_data_in_firestore(db, collection_name, document_id, data):
+    # Get a reference to the collection
+    collection_ref = db.collection(collection_name)
+    # Create or update a document with the specified ID
+    doc_ref = collection_ref.document(document_id)
+    # Set the data in the document
+    doc_ref.set(data)
+    print(f'Data stored in collection: {collection_name}, document ID: {document_id}')
