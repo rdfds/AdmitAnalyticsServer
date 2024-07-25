@@ -554,8 +554,9 @@ def get_all_applicant_info():
             detailed_entry.update(results_entry)
 
     full_info_list = []
+    full_info_list.append(detailed_entry)
 
-    return jsonify(full_info_list.append(detailed_entry))
+    return jsonify(full_info_list)
 
 
 def initialize_firestore(credentials_path):
