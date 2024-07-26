@@ -549,7 +549,9 @@ def get_all_applicant_info():
         if result.get('post_id') == post_id:
             results_entry = {
                 "accepted_colleges" : result.get('accepted_colleges'),
-                "rejected_colleges" : result.get('rejected_colleges')
+                "accepted_colleges_len" : len(result.get('accepted_colleges')),
+                "rejected_colleges" : result.get('rejected_colleges'),
+                "rejected_colleges_len" : len(result.get('rejected_colleges'))
             }
             detailed_entry.update(results_entry)
 
