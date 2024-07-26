@@ -547,7 +547,7 @@ def get_all_applicant_info():
 
     detailed_entry["activities"] = activities_list
     detailed_entry["activity_count"] = count
-    
+
     for result in results_data.values():
         if result.get('post_id') == post_id:
             results_entry = {
@@ -561,6 +561,40 @@ def get_all_applicant_info():
     full_info_list = [detailed_entry]
 
     return jsonify(full_info_list)
+
+@app.route("/getactivities")
+def get_activities():
+    user_id = request.args.get("user_id")
+    student_number = int(request.args.get("student_number"))
+
+    # Initialize Firestore
+    db = initialize_firestore('api/firebase-credentials.json')
+    activities_data, demographics_data, academics_data, majors_data, results_data = get_all_entries(db)
+
+    # Fetch the similar profiles document for the given user_id
+    similar_profiles_ref = db.collection('similarProfiles').document(user_id)
+    similar_profiles_doc = similar_profiles_ref.get()
+
+    post_id = ""
+
+    if similar_profiles_doc.exists:
+        similar_profiles_data = similar_profiles_doc.to_dict()
+
+        # Find the entry corresponding to the given student_number
+        match_key = f"match_{student_number}"
+        if match_key in similar_profiles_data:
+            post_id = similar_profiles_data[match_key].get('post_id')
+
+    activities_list = []
+
+    for result in activities_data:
+        if result.get('post_id') == post_id:
+            activity_entry = {
+                "activity": result.get('activity')
+            }
+            activities_list.append(activity_entry)
+
+    return jsonify(activities_list) 
 
 def initialize_firestore(credentials_path):
     # Set the environment variable for the Firestore credentials
