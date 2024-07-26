@@ -493,73 +493,71 @@ def get_all_applicant_info():
         if match_key in similar_profiles_data:
             post_id = similar_profiles_data[match_key].get('post_id')
 
+    detailed_entry = {}
+
     for result in demographics_data.values():
         if result.get('post_id') == post_id:
             detailed_entry = {
                 "student_number": student_number,
                 "post_id": post_id,
                 "race": result.get('race'),
-                "family_income_level" : result.get("family_income_level"),
-                "first_generation" : result.get("first_generation"),
-                "underrepresented_minority_status" : result.get("underrepresented_minority_status"),
-                "school_type" : result.get("school_type"),
-                "requesting_financial_aid" : result.get("requesting_financial_aid"),
-                "school_competitiveness" : result.get("school_competitiveness"),
-                "location_competitiveness" : result.get("location_competitiveness"),
-                "legacy_donor_connection" : result.get("legacy_donor_connection")
+                "family_income_level": result.get("family_income_level"),
+                "first_generation": result.get("first_generation"),
+                "underrepresented_minority_status": result.get("underrepresented_minority_status"),
+                "school_type": result.get("school_type"),
+                "requesting_financial_aid": result.get("requesting_financial_aid"),
+                "school_competitiveness": result.get("school_competitiveness"),
+                "location_competitiveness": result.get("location_competitiveness"),
+                "legacy_donor_connection": result.get("legacy_donor_connection")
             }
 
     for result in majors_data.values():
         if result.get('post_id') == post_id:
             major_entry = {
-                "major" : result.get('similar_major')
+                "major": result.get('similar_major')
             }
             detailed_entry.update(major_entry)
 
     for result in academics_data.values():
         if result.get('post_id') == post_id:
             academics_entry = {
-                "act_score" : result.get('act_score'),
-                "sat_score" : result.get('sat_score'),
-                "gpa" : result.get('gpa'),
-                "course_rigor" : result.get('course_rigor')
+                "act_score": result.get('act_score'),
+                "sat_score": result.get('sat_score'),
+                "gpa": result.get('gpa'),
+                "course_rigor": result.get('course_rigor')
             }
             detailed_entry.update(academics_entry)
 
-    idx = 1
-    activities_entry = {}
+    activities_list = []
 
     for result in activities_data:
         if result.get('post_id') == post_id:
-            activities_entry["activity_" + str(idx)] = {
-                "activity" : result.get('activity'),
-                "category_tags" : result.get('category_tags'),
-                "diversity_uniqueness_score" : result.get('diversity_uniqueness_score'),
-                "leadership_initiative_score" : result.get('leadership_initiative_score'),
-                "saturation_of_broader_category" : result.get('saturation_of_broader_category'),
-                "scale_impact_reach_score" : result.get('scale_impact_reach_score'),
-                "school_hook" : result.get('school_hook')
+            activity_entry = {
+                "activity": result.get('activity'),
+                "category_tags": result.get('category_tags'),
+                "diversity_uniqueness_score": result.get('diversity_uniqueness_score'),
+                "leadership_initiative_score": result.get('leadership_initiative_score'),
+                "saturation_of_broader_category": result.get('saturation_of_broader_category'),
+                "scale_impact_reach_score": result.get('scale_impact_reach_score'),
+                "school_hook": result.get('school_hook')
             }
+            activities_list.append(activity_entry)
 
-            idx+= 1
-
-            detailed_entry.update(activities_entry)
+    detailed_entry["activities"] = activities_list
 
     for result in results_data.values():
         if result.get('post_id') == post_id:
             results_entry = {
-                "accepted_colleges" : result.get('accepted_colleges'),
-                "accepted_colleges_len" : len(result.get('accepted_colleges')),
-                "rejected_colleges" : result.get('rejected_colleges'),
-                "rejected_colleges_len" : len(result.get('rejected_colleges'))
+                "accepted_colleges": result.get('accepted_colleges'),
+                "accepted_colleges_len": len(result.get('accepted_colleges')),
+                "rejected_colleges": result.get('rejected_colleges'),
+                "rejected_colleges_len": len(result.get('rejected_colleges'))
             }
             detailed_entry.update(results_entry)
 
-    full_info_list = []
-    full_info_list.append(detailed_entry)
+    full_info_list = [detailed_entry]
 
     return jsonify(full_info_list)
-
 
 def initialize_firestore(credentials_path):
     # Set the environment variable for the Firestore credentials
