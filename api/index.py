@@ -530,8 +530,10 @@ def get_all_applicant_info():
 
     activities_list = []
 
+    count = 0
     for result in activities_data:
         if result.get('post_id') == post_id:
+            count+=1
             activity_entry = {
                 "activity": result.get('activity'),
                 "category_tags": result.get('category_tags'),
@@ -544,7 +546,8 @@ def get_all_applicant_info():
             activities_list.append(activity_entry)
 
     detailed_entry["activities"] = activities_list
-
+    detailed_entry["activity_count"] = count
+    
     for result in results_data.values():
         if result.get('post_id') == post_id:
             results_entry = {
