@@ -71,10 +71,7 @@ def get_area_difficulty(location):
                     "type": "object",
                     "properties": {
                         "location_competitiveness": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
+                            "type": "int",
                         }
                     },
                     "required": ["location_competitiveness"]
