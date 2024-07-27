@@ -400,7 +400,7 @@ def find_similar_entries():
     user_info = get_user_info(user_id, db)
     interested_colleges = user_info['interested_colleges']
     major = user_info['major']
-    return user_info['location_competitiveness']
+    return str(user_info['location_competitiveness'])
     if not user_info:
         return jsonify({"error": "User not found"}), 404
     
