@@ -596,6 +596,73 @@ def get_activities():
 
     return jsonify(activities_list) 
 
+@app.route("/getacceptedcolleges")
+def get_accepted_colleges():
+    user_id = request.args.get("user_id")
+    student_number = int(request.args.get("student_number"))
+
+    # Initialize Firestore
+    db = initialize_firestore('api/firebase-credentials.json')
+    activities_data, demographics_data, academics_data, majors_data, results_data = get_all_entries(db)
+
+    # Fetch the similar profiles document for the given user_id
+    similar_profiles_ref = db.collection('similarProfiles').document(user_id)
+    similar_profiles_doc = similar_profiles_ref.get()
+
+    post_id = ""
+
+    if similar_profiles_doc.exists:
+        similar_profiles_data = similar_profiles_doc.to_dict()
+
+        # Find the entry corresponding to the given student_number
+        match_key = f"match_{student_number}"
+        if match_key in similar_profiles_data:
+            post_id = similar_profiles_data[match_key].get('post_id')
+
+    accepted_colleges_list = []
+
+    for result in results_data.values():
+        if result.get('post_id') == post_id:
+            accepted_colleges = result.get('accepted_colleges', [])
+            for college in accepted_colleges:
+                accepted_colleges_list.append({"accepted_college": college})
+
+    return jsonify(accepted_colleges_list)
+
+@app.route("/getrejectedcolleges")
+def get_rejected_colleges():
+    user_id = request.args.get("user_id")
+    student_number = int(request.args.get("student_number"))
+
+    # Initialize Firestore
+    db = initialize_firestore('api/firebase-credentials.json')
+    activities_data, demographics_data, academics_data, majors_data, results_data = get_all_entries(db)
+
+    # Fetch the similar profiles document for the given user_id
+    similar_profiles_ref = db.collection('similarProfiles').document(user_id)
+    similar_profiles_doc = similar_profiles_ref.get()
+
+    post_id = ""
+
+    if similar_profiles_doc.exists:
+        similar_profiles_data = similar_profiles_doc.to_dict()
+
+        # Find the entry corresponding to the given student_number
+        match_key = f"match_{student_number}"
+        if match_key in similar_profiles_data:
+            post_id = similar_profiles_data[match_key].get('post_id')
+
+    rejected_colleges_list = []
+
+    for result in results_data.values():
+        if result.get('post_id') == post_id:
+            rejected_colleges = result.get('rejected_colleges', [])
+            for college in rejected_colleges:
+                rejected_colleges_list.append({"rejected_college": college})
+
+    return jsonify(rejected_colleges_list)
+
+    
 def initialize_firestore(credentials_path):
     # Set the environment variable for the Firestore credentials
     os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credentials_path
