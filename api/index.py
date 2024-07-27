@@ -85,7 +85,7 @@ def get_area_difficulty(location):
     )
     
     try:
-        function_response = completion.choices[0].message.function_call.arguments
+        function_response = response.choices[0].message.function_call.arguments
         location_competitiveness = json.loads(function_response).get('location_competitiveness', [])
         return location_competitiveness
     except ValueError:
@@ -662,7 +662,7 @@ def get_rejected_colleges():
 
     return jsonify(rejected_colleges_list)
 
-    
+
 def initialize_firestore(credentials_path):
     # Set the environment variable for the Firestore credentials
     os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credentials_path
