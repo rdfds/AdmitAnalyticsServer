@@ -86,7 +86,7 @@ def get_area_difficulty(location):
     
     try:
         function_response = response.choices[0].message.function_call.arguments
-        location_competitiveness = json.loads(function_response).get('location_competitiveness', [])
+        location_competitiveness = json.loads(function_response).get('location_competitiveness', 5)
         return location_competitiveness
     except ValueError:
         # If the response is not a valid number, return a default value
@@ -98,7 +98,7 @@ def addUserCollegeInformation():
     user_id = request.args.get('user_id')
     major = request.args.get('major')
     college_desc = request.args.get('college_desc')
-    
+
     # Print or log the data for debugging purposes
     print(f'user_id: {user_id}, major: {major}, college_desc: {college_desc}')
     
@@ -116,6 +116,7 @@ def addUserCollegeInformation():
     college_data = load_college_data('api/us_universities.csv')
     
     # Get the structured list of interested colleges and major
+    #.replace(",", "")?
     interested_colleges = get_interested_colleges(college_desc, college_data)
     major = get_similar_major(major)
     #return major
