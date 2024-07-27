@@ -90,7 +90,7 @@ def get_area_difficulty(location):
         return location_competitiveness
     except ValueError:
         # If the response is not a valid number, return a default value
-        return -1
+        return 5
 
 @app.route("/addusercollegeinformation")
 def addUserCollegeInformation():
@@ -400,7 +400,7 @@ def find_similar_entries():
     user_info = get_user_info(user_id, db)
     interested_colleges = user_info['interested_colleges']
     major = user_info['major']
-    #return str(user_info)
+    return user_info['location_competitiveness']
     if not user_info:
         return jsonify({"error": "User not found"}), 404
     
