@@ -6,6 +6,7 @@ from google.cloud import firestore
 from flask import Flask, request, jsonify 
 import requests, json
 from openai import OpenAI
+import string
 
 # Flask constructor takes the name of 
 # current module (__name__) as argument.
