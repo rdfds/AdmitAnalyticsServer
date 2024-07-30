@@ -601,7 +601,8 @@ def get_activities():
             activities_list.append(activity_entry)
 
     if len(activities_list) == 0:
-        activities_list = ["activity" : "None!"]
+        activities_list = []
+        activities_list.append({"activity" : "None!"})
 
     return jsonify(activities_list) 
 
@@ -640,7 +641,8 @@ def get_accepted_colleges():
                 accepted_colleges_list.append({"accepted_college": capitalized_string})
 
     if len(accepted_colleges_list) == 0:
-        accepted_colleges_list = ["accepted_college" : "None!"]
+        accepted_colleges_list = []
+        accepted_colleges_list.append({"accepted_college": "None!"})
 
     return jsonify(accepted_colleges_list)
 
@@ -679,8 +681,9 @@ def get_rejected_colleges():
                 rejected_colleges_list.append({"rejected_college": capitalized_string})
 
     if len(rejected_colleges_list) == 0:
-        rejected_colleges_list = ["rejected_college" : "None!"]
-        
+        rejected_colleges_list = []
+        rejected_colleges_list.append({"rejected_college": "None!"})
+
     return jsonify(rejected_colleges_list)
 
 
