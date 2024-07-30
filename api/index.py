@@ -600,6 +600,9 @@ def get_activities():
             }
             activities_list.append(activity_entry)
 
+    if len(activities_list) == 0:
+        activities_list = ["activity" : "None!"]
+
     return jsonify(activities_list) 
 
 @app.route("/getacceptedcolleges")
@@ -635,6 +638,9 @@ def get_accepted_colleges():
                 capitalized_string = string_removed_underscore.capitalize()
                 # Format the string to include quotes
                 accepted_colleges_list.append({"accepted_college": capitalized_string})
+
+    if len(accepted_colleges_list) == 0:
+        accepted_colleges_list = ["accepted_college" : "None!"]
 
     return jsonify(accepted_colleges_list)
 
@@ -672,6 +678,9 @@ def get_rejected_colleges():
                 # Format the string to include quotes
                 rejected_colleges_list.append({"rejected_college": capitalized_string})
 
+    if len(rejected_colleges_list) == 0:
+        rejected_colleges_list = ["rejected_college" : "None!"]
+        
     return jsonify(rejected_colleges_list)
 
 
