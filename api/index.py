@@ -96,6 +96,10 @@ def addUserCollegeInformation():
     major = request.args.get('major')
     college_desc = request.args.get('college_desc')
 
+    translator = str.maketrans('', '', string.punctuation)
+    # Use the translate method to remove all punctuation
+    college_desc = college_desc.translate(translator)
+
     # Print or log the data for debugging purposes
     print(f'user_id: {user_id}, major: {major}, college_desc: {college_desc}')
     
@@ -587,8 +591,12 @@ def get_activities():
 
     for result in activities_data:
         if result.get('post_id') == post_id:
+            string_removed_underscore = result.get('activity').replace("_", " ")
+            capitalized_string = string_removed_underscore.capitalize()
+            # Format the string to include quotes
+            quoted_string = f'"{capitalized_string}"'
             activity_entry = {
-                "activity": result.get('activity')
+                "activity": quoted_string
             }
             activities_list.append(activity_entry)
 
@@ -623,7 +631,11 @@ def get_accepted_colleges():
         if result.get('post_id') == post_id:
             accepted_colleges = result.get('accepted_colleges', [])
             for college in accepted_colleges:
-                accepted_colleges_list.append({"accepted_college": college})
+                string_removed_underscore = college.replace("_", " ")
+                capitalized_string = string_removed_underscore.capitalize()
+                # Format the string to include quotes
+                quoted_string = f'"{capitalized_string}"'
+                accepted_colleges_list.append({"accepted_college": quoted_string})
 
     return jsonify(accepted_colleges_list)
 
@@ -656,7 +668,11 @@ def get_rejected_colleges():
         if result.get('post_id') == post_id:
             rejected_colleges = result.get('rejected_colleges', [])
             for college in rejected_colleges:
-                rejected_colleges_list.append({"rejected_college": college})
+                string_removed_underscore = college.replace("_", " ")
+                capitalized_string = string_removed_underscore.capitalize()
+                # Format the string to include quotes
+                quoted_string = f'"{capitalized_string}"'
+                rejected_colleges_list.append({"rejected_college": quoted_string})
 
     return jsonify(rejected_colleges_list)
 
