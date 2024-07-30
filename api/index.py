@@ -595,9 +595,8 @@ def get_activities():
             string_removed_underscore = result.get('activity').replace("_", " ")
             capitalized_string = string_removed_underscore.capitalize()
             # Format the string to include quotes
-            quoted_string = f'"{capitalized_string}"'
             activity_entry = {
-                "activity": quoted_string
+                "activity": capitalized_string
             }
             activities_list.append(activity_entry)
 
@@ -635,8 +634,7 @@ def get_accepted_colleges():
                 string_removed_underscore = college.replace("_", " ")
                 capitalized_string = string_removed_underscore.capitalize()
                 # Format the string to include quotes
-                quoted_string = f'"{capitalized_string}"'
-                accepted_colleges_list.append({"accepted_college": quoted_string})
+                accepted_colleges_list.append({"accepted_college": capitalized_string})
 
     return jsonify(accepted_colleges_list)
 
@@ -672,8 +670,7 @@ def get_rejected_colleges():
                 string_removed_underscore = college.replace("_", " ")
                 capitalized_string = string_removed_underscore.capitalize()
                 # Format the string to include quotes
-                quoted_string = f'"{capitalized_string}"'
-                rejected_colleges_list.append({"rejected_college": quoted_string})
+                rejected_colleges_list.append({"rejected_college": capitalized_string})
 
     return jsonify(rejected_colleges_list)
 
