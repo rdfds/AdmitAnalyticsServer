@@ -440,15 +440,16 @@ def find_similar_entries():
         similarity_score = entry[1]
         for result in demographics_data.values():
             if result.get('post_id') == post_id:
+                
                 detailed_entry = {
                     "student_number": str(idx),
                     "post_id": post_id,
                     "similarity_score": similarity_score,
-                    "race": result.get('race'),
-                    "family_income_level" : result.get("family_income_level"),
+                    "race": result.get('race').lower().capitalize(),
+                    "family_income_level" : result.get("family_income_level").lower().capitalize(),
                     "first_generation" : result.get("first_generation"),
                     "underrepresented_minority_status" : result.get("underrepresented_minority_status"),
-                    "school_type" : result.get("school_type"),
+                    "school_type" : result.get("school_type").lower().capitalize(),
                     "requesting_financial_aid" : result.get("requesting_financial_aid"),
                     "school_competitiveness" : result.get("school_competitiveness"),
                     "location_competitiveness" : result.get("location_competitiveness"),
@@ -457,7 +458,7 @@ def find_similar_entries():
                 for result in majors_data.values():
                     if result.get('post_id') == post_id:
                         major_entry = {
-                            "major" : result.get('similar_major')
+                            "major" : result.get('similar_major').lower().capitalize()
                         }
                         detailed_entry.update(major_entry)
                 
