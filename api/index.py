@@ -598,7 +598,7 @@ def get_all_applicant_info():
             if school_competitiveness_entry == "-1" or "-1" in school_competitiveness_entry or school_competitiveness_entry is None or school_competitiveness_entry == "":
                 school_competitiveness_entry = "N/A"
 
-            detailed_entry = {
+            demographics_entry = {
                 "student_number": str(idx),
                 "post_id": post_id,
                 "similarity_score": similarity_score,
@@ -612,6 +612,7 @@ def get_all_applicant_info():
                 "location_competitiveness" : result.get("location_competitiveness"),
                 "legacy_donor_connection" : result.get("legacy_donor_connection")
             }
+            detailed_entry.update(entry)
     
     for result in majors_data.values():
         if result.get('post_id') == post_id:
