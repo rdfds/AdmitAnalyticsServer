@@ -456,17 +456,17 @@ def find_similar_entries():
                 first_generation_entry = result.get('first_generation')
                 if first_generation_entry == "-1" or "-1" in first_generation_entry or first_generation_entry is None or first_generation_entry == "":
                     first_generation_entry = "N/A"
-                else if first_generation_entry == "y":
+                elif first_generation_entry == "y":
                     first_generation_entry = "Yes"
-                else if first_generation_entry == "n":
+                elif first_generation_entry == "n":
                     first_generation_entry = "No"
 
                 underrepresented_minority_status_entry = result.get('underrepresented_minority_status')
                 if underrepresented_minority_status_entry == "-1" or "-1" in underrepresented_minority_status_entry or underrepresented_minority_status_entry is None or underrepresented_minority_status_entry == "":
                     underrepresented_minority_status_entry = "N/A"
-                else if underrepresented_minority_status_entry == "y":
+                elif underrepresented_minority_status_entry == "y":
                     underrepresented_minority_status_entry = "Yes"
-                else if underrepresented_minority_status_entry == "n":
+                elif underrepresented_minority_status_entry == "n":
                     underrepresented_minority_status_entry = "No"
 
                 school_type_entry = result.get('school_type')
@@ -478,9 +478,9 @@ def find_similar_entries():
                 requesting_financial_aid_entry = result.get('requesting_financial_aid')
                 if requesting_financial_aid_entry == "-1" or "-1" in requesting_financial_aid_entry or requesting_financial_aid_entry is None or requesting_financial_aid_entry == "":
                     requesting_financial_aid_entry = "N/A"
-                else if requesting_financial_aid_entry == "y":
+                elif requesting_financial_aid_entry == "y":
                     requesting_financial_aid_entry = "Yes"
-                else if requesting_financial_aid_entry == "n":
+                elif requesting_financial_aid_entry == "n":
                     requesting_financial_aid_entry = "No"
 
                 school_competitiveness_entry = result.get('school_competitiveness')
