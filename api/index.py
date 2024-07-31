@@ -609,7 +609,7 @@ def get_all_applicant_info():
                 "location_competitiveness" : result.get("location_competitiveness"),
                 "legacy_donor_connection" : result.get("legacy_donor_connection")
             }
-            detailed_entry.update(entry)
+            detailed_entry.update(demographics_entry)
     
     for result in majors_data.values():
         if result.get('post_id') == post_id:
