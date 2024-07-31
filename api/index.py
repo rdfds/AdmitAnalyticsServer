@@ -439,8 +439,7 @@ def find_similar_entries():
         post_id = entry[0]
         similarity_score = entry[1]
         for result in demographics_data.values():
-            if result.get('post_id') == post_id:
-                
+            if result.get('post_id') == post_id:       
                 race_entry = result.get('race')
                 if race_entry == "-1" or "-1" in race_entry or race_entry is None or race_entry == "":
                     race_entry = "N/A"
@@ -501,12 +500,18 @@ def find_similar_entries():
                     "location_competitiveness" : result.get("location_competitiveness"),
                     "legacy_donor_connection" : result.get("legacy_donor_connection")
                 }
-                for result in majors_data.values():
-                    if result.get('post_id') == post_id:
-                        major_entry = {
-                            "major" : result.get('similar_major').lower().capitalize()
-                        }
-                        detailed_entry.update(major_entry)
+        
+        for result in majors_data.values():
+            if result.get('post_id') == post_id:
+                major_entry = result.get('similar_major')
+                if major_entry == "-1" or "-1" in major_entry or major_entry is None or major_entry == "":
+                    major_entry = "N/A"
+                else:
+                    major_entry = major_entry.lower().capitalize()
+                major_entry_dict = {
+                    "major" : major_entry
+                }
+                detailed_entry.update(major_entry_dict)
                 
                 detailed_top_10_entries_dict['match_' + str(idx)] = detailed_entry
                 detailed_top_10_entries.append(detailed_entry)
@@ -547,34 +552,106 @@ def get_all_applicant_info():
 
     for result in demographics_data.values():
         if result.get('post_id') == post_id:
-            detailed_entry = {
-                "student_number": student_number,
-                "post_id": post_id,
-                "race": result.get('race'),
-                "family_income_level": result.get("family_income_level"),
-                "first_generation": result.get("first_generation"),
-                "underrepresented_minority_status": result.get("underrepresented_minority_status"),
-                "school_type": result.get("school_type"),
-                "requesting_financial_aid": result.get("requesting_financial_aid"),
-                "school_competitiveness": result.get("school_competitiveness"),
-                "location_competitiveness": result.get("location_competitiveness"),
-                "legacy_donor_connection": result.get("legacy_donor_connection")
-            }
+            race_entry = result.get('race')
+            if race_entry == "-1" or "-1" in race_entry or race_entry is None or race_entry == "":
+                race_entry = "N/A"
+            else:
+                race_entry = race_entry.lower().capitalize()
+            
+            family_income_entry = result.get('family_income_level')
+            if family_income_entry == "-1" or "-1" in family_income_entry or family_income_entry is None or family_income_entry == "":
+                family_income_entry = "N/A"
+            else:
+                family_income_entry = family_income_entry.lower().capitalize()
 
+            first_generation_entry = result.get('first_generation')
+            if first_generation_entry == "-1" or "-1" in first_generation_entry or first_generation_entry is None or first_generation_entry == "":
+                first_generation_entry = "N/A"
+            elif first_generation_entry == "y":
+                first_generation_entry = "Yes"
+            elif first_generation_entry == "n":
+                first_generation_entry = "No"
+
+            underrepresented_minority_status_entry = result.get('underrepresented_minority_status')
+            if underrepresented_minority_status_entry == "-1" or "-1" in underrepresented_minority_status_entry or underrepresented_minority_status_entry is None or underrepresented_minority_status_entry == "":
+                underrepresented_minority_status_entry = "N/A"
+            elif underrepresented_minority_status_entry == "y":
+                underrepresented_minority_status_entry = "Yes"
+            elif underrepresented_minority_status_entry == "n":
+                underrepresented_minority_status_entry = "No"
+
+            school_type_entry = result.get('school_type')
+            if school_type_entry == "-1" or "-1" in school_type_entry or school_type_entry is None or school_type_entry == "":
+                school_type_entry = "N/A"
+            else:
+                school_type_entry = school_type_entry.lower().capitalize()
+
+            requesting_financial_aid_entry = result.get('requesting_financial_aid')
+            if requesting_financial_aid_entry == "-1" or "-1" in requesting_financial_aid_entry or requesting_financial_aid_entry is None or requesting_financial_aid_entry == "":
+                requesting_financial_aid_entry = "N/A"
+            elif requesting_financial_aid_entry == "y":
+                requesting_financial_aid_entry = "Yes"
+            elif requesting_financial_aid_entry == "n":
+                requesting_financial_aid_entry = "No"
+
+            school_competitiveness_entry = result.get('school_competitiveness')
+            if school_competitiveness_entry == "-1" or "-1" in school_competitiveness_entry or school_competitiveness_entry is None or school_competitiveness_entry == "":
+                school_competitiveness_entry = "N/A"
+
+            detailed_entry = {
+                "student_number": str(idx),
+                "post_id": post_id,
+                "similarity_score": similarity_score,
+                "race": race_entry,
+                "family_income_level" : family_income_entry,
+                "first_generation" : first_generation_entry,
+                "underrepresented_minority_status" : underrepresented_minority_status_entry,
+                "school_type" : school_type_entry,
+                "requesting_financial_aid" : requesting_financial_aid_entry,
+                "school_competitiveness" : school_competitiveness_entry,
+                "location_competitiveness" : result.get("location_competitiveness"),
+                "legacy_donor_connection" : result.get("legacy_donor_connection")
+            }
+    
     for result in majors_data.values():
         if result.get('post_id') == post_id:
-            major_entry = {
-                "major": result.get('similar_major')
+            major_entry = result.get('similar_major')
+            if major_entry == "-1" or "-1" in major_entry or major_entry is None or major_entry == "":
+                major_entry = "N/A"
+            else:
+                major_entry = major_entry.lower().capitalize()
+            major_entry_dict = {
+                "major" : major_entry
             }
-            detailed_entry.update(major_entry)
+            detailed_entry.update(major_entry_dict)
+            
+            detailed_top_10_entries_dict['match_' + str(idx)] = detailed_entry
+            detailed_top_10_entries.append(detailed_entry)
 
     for result in academics_data.values():
         if result.get('post_id') == post_id:
+            act_score_entry = result.get('act_score')
+            if act_score_entry == "-1" or "-1" in act_score_entry or act_score_entry is None or act_score_entry == "":
+                act_score_entry = "N/A"
+            else:
+                act_score_entry = act_score_entry
+            
+            sat_score_entry = result.get('sat_score')
+            if sat_score_entry == "-1" or "-1" in sat_score_entry or sat_score_entry is None or sat_score_entry == "":
+                sat_score_entry = "N/A"
+            else:
+                sat_score_entry = sat_score_entry  
+
+            course_rigor_entry = result.get('course_rigor')
+            if course_rigor_entry == "-1" or "-1" in course_rigor_entry or course_rigor_entry is None or course_rigor_entry == "":
+                course_rigor_entry = "N/A"
+            else:
+                course_rigor_entry = course_rigor_entry            
             academics_entry = {
-                "act_score": result.get('act_score'),
-                "sat_score": result.get('sat_score'),
+                "act_score": act_score_entry,
+                "sat_score": sat_score_entry,
                 "gpa": result.get('gpa'),
-                "course_rigor": result.get('course_rigor')
+                "course_rigor": course_rigor_entry
             }
             detailed_entry.update(academics_entry)
 
