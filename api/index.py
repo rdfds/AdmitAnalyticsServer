@@ -605,7 +605,7 @@ def get_all_applicant_info():
                 "underrepresented_minority_status" : underrepresented_minority_status_entry,
                 "school_type" : school_type_entry,
                 "requesting_financial_aid" : requesting_financial_aid_entry,
-                "school_competitiveness" : school_competitiveness_entry,
+                "school_competitiveness" : result.get('school_competitiveness'),
                 "location_competitiveness" : result.get("location_competitiveness"),
                 "legacy_donor_connection" : result.get("legacy_donor_connection")
             }
