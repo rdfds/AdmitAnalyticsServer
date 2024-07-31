@@ -625,8 +625,6 @@ def get_all_applicant_info():
             }
             detailed_entry.update(major_entry_dict)
             
-            detailed_top_10_entries_dict['match_' + str(idx)] = detailed_entry
-            detailed_top_10_entries.append(detailed_entry)
 
     for result in academics_data.values():
         if result.get('post_id') == post_id:
