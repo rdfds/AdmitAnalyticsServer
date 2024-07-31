@@ -441,17 +441,63 @@ def find_similar_entries():
         for result in demographics_data.values():
             if result.get('post_id') == post_id:
                 
+                race_entry = result.get('race')
+                if race_entry == "-1" or "-1" in race_entry or race_entry is None or race_entry == "":
+                    race_entry = "N/A"
+                else:
+                    race_entry = race_entry.lower().capitalize()
+                
+                family_income_entry = result.get('family_income_level')
+                if family_income_entry == "-1" or "-1" in family_income_entry or family_income_entry is None or family_income_entry == "":
+                    family_income_entry = "N/A"
+                else:
+                    family_income_entry = family_income_entry.lower().capitalize()
+
+                first_generation_entry = result.get('first_generation')
+                if first_generation_entry == "-1" or "-1" in first_generation_entry or first_generation_entry is None or first_generation_entry == "":
+                    first_generation_entry = "N/A"
+                else if first_generation_entry == "y":
+                    first_generation_entry = "Yes"
+                else if first_generation_entry == "n":
+                    first_generation_entry = "No"
+
+                underrepresented_minority_status_entry = result.get('underrepresented_minority_status')
+                if underrepresented_minority_status_entry == "-1" or "-1" in underrepresented_minority_status_entry or underrepresented_minority_status_entry is None or underrepresented_minority_status_entry == "":
+                    underrepresented_minority_status_entry = "N/A"
+                else if underrepresented_minority_status_entry == "y":
+                    underrepresented_minority_status_entry = "Yes"
+                else if underrepresented_minority_status_entry == "n":
+                    underrepresented_minority_status_entry = "No"
+
+                school_type_entry = result.get('school_type')
+                if school_type_entry == "-1" or "-1" in school_type_entry or school_type_entry is None or school_type_entry == "":
+                    school_type_entry = "N/A"
+                else:
+                    school_type_entry = school_type_entry.lower().capitalize()
+
+                requesting_financial_aid_entry = result.get('requesting_financial_aid')
+                if requesting_financial_aid_entry == "-1" or "-1" in requesting_financial_aid_entry or requesting_financial_aid_entry is None or requesting_financial_aid_entry == "":
+                    requesting_financial_aid_entry = "N/A"
+                else if requesting_financial_aid_entry == "y":
+                    requesting_financial_aid_entry = "Yes"
+                else if requesting_financial_aid_entry == "n":
+                    requesting_financial_aid_entry = "No"
+
+                school_competitiveness_entry = result.get('school_competitiveness')
+                if school_competitiveness_entry == "-1" or "-1" in school_competitiveness_entry or school_competitiveness_entry is None or school_competitiveness_entry == "":
+                    school_competitiveness_entry = "N/A"
+
                 detailed_entry = {
                     "student_number": str(idx),
                     "post_id": post_id,
                     "similarity_score": similarity_score,
-                    "race": result.get('race').lower().capitalize(),
-                    "family_income_level" : result.get("family_income_level").lower().capitalize(),
-                    "first_generation" : result.get("first_generation"),
-                    "underrepresented_minority_status" : result.get("underrepresented_minority_status"),
-                    "school_type" : result.get("school_type").lower().capitalize(),
-                    "requesting_financial_aid" : result.get("requesting_financial_aid"),
-                    "school_competitiveness" : result.get("school_competitiveness"),
+                    "race": race_entry,
+                    "family_income_level" : family_income_entry,
+                    "first_generation" : first_generation_entry,
+                    "underrepresented_minority_status" : underrepresented_minority_status_entry,
+                    "school_type" : school_type_entry,
+                    "requesting_financial_aid" : requesting_financial_aid_entry,
+                    "school_competitiveness" : school_competitiveness_entry,
                     "location_competitiveness" : result.get("location_competitiveness"),
                     "legacy_donor_connection" : result.get("legacy_donor_connection")
                 }
