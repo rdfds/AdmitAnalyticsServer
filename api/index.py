@@ -599,9 +599,6 @@ def get_all_applicant_info():
                 school_competitiveness_entry = "N/A"
 
             demographics_entry = {
-                "student_number": str(idx),
-                "post_id": post_id,
-                "similarity_score": similarity_score,
                 "race": race_entry,
                 "family_income_level" : family_income_entry,
                 "first_generation" : first_generation_entry,
