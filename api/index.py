@@ -28,7 +28,10 @@ def hello_world():
 def processUserInformation():
     # Get the parameters from the request and convert to a dictionary
     data = request.args.to_dict()
-    location_competitiveness = get_area_difficulty(data['location'])
+    if (data['location'] == "none"):
+        location_competitiveness = -1
+    else:
+        location_competitiveness = get_area_difficulty(data['location'])
     data['location_competitiveness'] = location_competitiveness
     # Print or log the data for debugging purposes
     print(data)
