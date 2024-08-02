@@ -103,7 +103,7 @@ def addUserCollegeInformation():
     translator = str.maketrans('', '', string.punctuation)
     # Use the translate method to remove all punctuation
     college_desc = college_desc.translate(translator)
-
+    return college_desc
     # Print or log the data for debugging purposes
     print(f'user_id: {user_id}, major: {major}, college_desc: {college_desc}')
     
