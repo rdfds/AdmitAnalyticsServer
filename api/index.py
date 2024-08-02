@@ -122,6 +122,7 @@ def addUserCollegeInformation():
     # Get the structured list of interested colleges and major
     #.replace(",", "")?
     interested_colleges = get_interested_colleges(college_desc, college_data)
+    return jsonify({"interested_colleges" : interested_colleges})
     major = get_similar_major(major)
     #return major
     #return major
