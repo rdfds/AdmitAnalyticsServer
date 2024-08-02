@@ -151,7 +151,7 @@ def load_college_data(csv_file):
 def get_interested_colleges(college_desc, college_data):
     completion = client.chat.completions.create(
         #try to fix this make it work for more descriptions
-        model="gpt-4o",
+        model="gpt-4o-mini",
         messages=[
             {"role": "system", "content": "You are a helpful assistant that structures college descriptions."},
             {"role": "user", "content": f"Given the following description of college preferences/categories of interest: '{college_desc}', and the list of all known US colleges: '{college_data}', return a list of all the colleges that match the preferences/categories"}
