@@ -30,7 +30,7 @@ def hello_world():
 def processUserInformation():
     # Get the parameters from the request and convert to a dictionary
     data = request.args.to_dict()
-    if (data['location'] == "none"):
+    if (data['location'] == "-1"):
         location_competitiveness = -1
     else:
         location_competitiveness = get_area_difficulty(data['location'])
@@ -64,7 +64,7 @@ def get_area_difficulty(location):
     
     response = client.chat.completions.create(
         #model = "gpt-3.5-turbo-0125",
-        model = "gpt-4o",
+        model = "gpt-4o-mini",
         messages = [
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": prompt},
