@@ -7,10 +7,12 @@ from flask import Flask, request, jsonify
 import requests, json
 from openai import OpenAI
 import string
+from flask_cors import CORS
 
 # Flask constructor takes the name of 
 # current module (__name__) as argument.
 app = Flask(__name__)
+CORS(app)
 
 #ChatGPT API key
 client = OpenAI(
@@ -24,7 +26,7 @@ client = OpenAI(
 def hello_world():
     return "Hello World"
 
-@app.route("/processuserinformation", methods=['GET', 'OPTIONS'])
+@app.route("/processuserinformation", methods=['GET'])
 def processUserInformation():
     # Get the parameters from the request and convert to a dictionary
     data = request.args.to_dict()
