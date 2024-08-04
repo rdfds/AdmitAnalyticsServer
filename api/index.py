@@ -20,11 +20,11 @@ client = OpenAI(
 # The route() function of the Flask class is a decorator, 
 # which tells the application which URL should call 
 # the associated function.
-@app.route("/")
+@app.route("/", methods=['GET', 'OPTIONS'])
 def hello_world():
     return "Hello World"
 
-@app.route("/processuserinformation")
+@app.route("/processuserinformation", methods=['GET', 'OPTIONS'])
 def processUserInformation():
     # Get the parameters from the request and convert to a dictionary
     data = request.args.to_dict()
@@ -93,7 +93,7 @@ def get_area_difficulty(location):
         # If the response is not a valid number, return a default value
         return 5
 
-@app.route("/addusercollegeinformation")
+@app.route("/addusercollegeinformation", methods=['GET', 'OPTIONS'])
 def addUserCollegeInformation():
     # Get the parameters from the request
     user_id = request.args.get('user_id')
