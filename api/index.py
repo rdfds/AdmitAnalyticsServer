@@ -505,6 +505,10 @@ def find_similar_entries():
                     "location_competitiveness" : result.get("location_competitiveness"),
                     "legacy_donor_connection" : result.get("legacy_donor_connection")
                 }
+
+                for term in detailed_entry.values():
+                    if term == "-1" or "-1" in term or term is None or term == "":
+                        term = "N/A"
         
         for result in majors_data.values():
             if result.get('post_id') == post_id:
@@ -615,7 +619,7 @@ def get_all_applicant_info():
                 "legacy_donor_connection" : result.get("legacy_donor_connection")
             }
             detailed_entry.update(demographics_entry)
-    
+                
     for result in majors_data.values():
         if result.get('post_id') == post_id:
             major_entry = result.get('similar_major')
@@ -686,6 +690,10 @@ def get_all_applicant_info():
             }
             detailed_entry.update(results_entry)
 
+    for term in detailed_entry.values():
+        if term == "-1" or "-1" in term or term is None or term == "":
+            term = "N/A"
+            
     full_info_list = [detailed_entry]
 
     return jsonify(full_info_list)
