@@ -733,7 +733,7 @@ def get_activities():
             }
             activities_list.append(activity_entry)
 
-    if len(activities_list) == 0:
+    if len(activities_list) == 0 or "please" in activities_list["activity"].lower() or "provide" in activities_list["activity"].lower() or "input" in activities_list["activity"].lower() or "list " in activities_list["activity"].lower():
         activities_list = []
         activities_list.append({"activity" : "None!"})
 
@@ -773,7 +773,7 @@ def get_accepted_colleges():
                 # Format the string to include quotes
                 accepted_colleges_list.append({"accepted_college": capitalized_string})
 
-    if len(accepted_colleges_list) == 0:
+    if len(activities_list) == 0 or "please" in activities_list["activity"].lower() or "provide" in activities_list["activity"].lower() or "input" in activities_list["activity"].lower() or "list " in activities_list["activity"].lower():
         accepted_colleges_list = []
         accepted_colleges_list.append({"accepted_college": "None!"})
 
@@ -813,7 +813,7 @@ def get_rejected_colleges():
                 # Format the string to include quotes
                 rejected_colleges_list.append({"rejected_college": capitalized_string})
 
-    if len(rejected_colleges_list) == 0:
+    if len(activities_list) == 0 or "please" in activities_list["activity"].lower() or "provide" in activities_list["activity"].lower() or "input" in activities_list["activity"].lower() or "list " in activities_list["activity"].lower():
         rejected_colleges_list = []
         rejected_colleges_list.append({"rejected_college": "None!"})
 
