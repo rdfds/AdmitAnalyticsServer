@@ -668,12 +668,12 @@ def get_all_applicant_info():
             count+=1
             activity_entry = {
                 "activity": result.get('activity'),
-                "category_tags": result.get('category_tags'),
-                "diversity_uniqueness_score": result.get('diversity_uniqueness_score'),
-                "leadership_initiative_score": result.get('leadership_initiative_score'),
-                "saturation_of_broader_category": result.get('saturation_of_broader_category'),
-                "scale_impact_reach_score": result.get('scale_impact_reach_score'),
-                "school_hook": result.get('school_hook')
+                #"category_tags": result.get('category_tags'),
+                #"diversity_uniqueness_score": result.get('diversity_uniqueness_score'),
+                #"leadership_initiative_score": result.get('leadership_initiative_score'),
+                #"saturation_of_broader_category": result.get('saturation_of_broader_category'),
+                #"scale_impact_reach_score": result.get('scale_impact_reach_score'),
+                #"school_hook": result.get('school_hook')
             }
             activities_list.append(activity_entry)
 
